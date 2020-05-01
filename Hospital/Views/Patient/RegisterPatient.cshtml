@@ -1,0 +1,74 @@
+﻿@model PatientRegisterViewModel
+
+@{
+    ViewData["Title"] = "RegisterPatient";
+}
+
+<h1>RegisterPatient</h1>
+
+<h4>Patient</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Patient" asp-action="RegisterPatient">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="@Model.patient.Name" class="control-label"></label>
+                <input asp-for="@Model.patient.Name" class="form-control" />
+                <span asp-validation-for="@Model.patient.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="@Model.patient.Gender.GenderId" class="control-label"></label>
+
+                <select asp-for="@Model.patient.Gender.GenderId" asp-items="@Model.GenderList" class="form-control">
+                    <option>--Please select one--</option>
+                </select>
+
+
+                @*    @foreach (var item in ViewBag.employeee)
+            {
+                <option asp-for="DesignationId" value="@item.Designation.DesignationId" class="form-control">@item.Designation.designation</option>
+            }*@
+
+                <span asp-validation-for="@Model.patient.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.patient.BirthDate" class="control-label"></label>
+                <input asp-for="@Model.patient.BirthDate" class="form-control" />
+                <span asp-validation-for="@Model.patient.BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.patient.Phone" class="control-label"></label>
+                <input asp-for="@Model.patient.Phone" class="form-control" />
+                <span asp-validation-for="@Model.patient.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.patient.Address" class="control-label"></label>
+                <input asp-for="@Model.patient.Address" class="form-control" />
+                <span asp-validation-for="@Model.patient.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.patient.Height" class="control-label"></label>
+                <input asp-for="@Model.patient.Height" class="form-control" />
+                <span asp-validation-for="@Model.patient.Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.patient.Weight" class="control-label"></label>
+                <input asp-for="@Model.patient.Weight" class="form-control" />
+                <span asp-validation-for="@Model.patient.Weight" class="text-danger"></span>
+            </div>            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
