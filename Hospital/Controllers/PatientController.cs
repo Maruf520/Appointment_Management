@@ -11,12 +11,11 @@ namespace Hospital.Controllers
 {
     public class PatientController : Controller
     {
-        private readonly IPatientRepository _patientRepository;
-        private readonly HospitalDbContext _hospitalDbContext;
-        public PatientController(IPatientRepository patientRepository, HospitalDbContext hospitalDbContext)
+        
+        private readonly IUnitOfWork _unitOfWork;
+        public PatientController( IUnitOfWork unitOfWork)
         {
-            _patientRepository = patientRepository;
-            _hospitalDbContext = hospitalDbContext;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
@@ -27,7 +26,7 @@ namespace Hospital.Controllers
         public IActionResult RegisterPatient()
         {
             var ViewModel = new PatientRegisterViewModel();
-            var genders = _hospitalDbContext.Genders;
+            var genders = _unitOfWork.Gender.GetGenders();
             foreach(var gender in genders)
             {
                 ViewModel.GenderList.Add(new SelectListItem()
@@ -63,11 +62,11 @@ namespace Hospital.Controllers
                     Height = model.patient.Height,
                     Weight = model.patient.Weight,
                     GenderId = model.patient.Gender.GenderId,
-                    Token = (year + sMonth + sDay + _patientRepository.GetPatients().Count()).ToString(),
+                    Token = (year + sMonth + sDay + _unitOfWork.Patient.GetPatients().Count()).ToString(),
 
                 };
-                _hospitalDbContext.Add(patient);
-                _hospitalDbContext.SaveChanges();
+                _unitOfWork.Patient.Add(patient);
+                _unitOfWork.Complete();
                 return RedirectToAction("Index","Home");
             }
             return View();
