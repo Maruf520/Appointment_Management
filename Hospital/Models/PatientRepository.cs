@@ -22,12 +22,12 @@ namespace Hospital.Models
 
         public Patient GetPatientById(int id)
         {
-            return _hospitalDbContext.Patients.SingleOrDefault(c => c.Id ==id);
+            return _hospitalDbContext.Patients.Include(s=> s.Gender).SingleOrDefault(c => c.Id == id);
         }
 
         public IEnumerable<Patient> GetPatients()
         {
-            return _hospitalDbContext.Patients;
+            return _hospitalDbContext.Patients.Include(c => c.Gender);
         }
 
 /*        public IEnumerable<Patient> GetRecentPatients()
