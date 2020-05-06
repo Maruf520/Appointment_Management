@@ -1,4 +1,5 @@
 ﻿using Hospital.Models;
+using Hospital.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,12 @@ namespace Hospital
     public interface IUnitOfWork
     {
         IPatientRepository Patient { get; }
-        IGenderRepository Gender { get; } 
+        IGenderRepository Gender { get; }
+        IDoctorRepository doctorRepository { get; }
+        ISpecializationRepository specializationRepository { get; }
+
+
+
 
         void Complete();
     }

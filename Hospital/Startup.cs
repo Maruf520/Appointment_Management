@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Hospital.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +21,9 @@ namespace Hospital
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           /* services.AddScoped<IPatientRepository, PatientRepository>();*/
+            services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<HospitalDbContext>();
+            /* services.AddScoped<IPatientRepository, PatientRepository>();*/
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<HospitalDbContext>(options =>
 
@@ -50,7 +48,8 @@ namespace Hospital
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
