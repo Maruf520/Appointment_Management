@@ -25,6 +25,7 @@ namespace Hospital.Controllers
         [HttpGet]
         public IActionResult RegisterPatient()
         {
+
             var ViewModel = new PatientRegisterViewModel();
             var genders = _unitOfWork.Gender.GetGenders();
             foreach(var gender in genders)
@@ -69,6 +70,62 @@ namespace Hospital.Controllers
                 _unitOfWork.Complete();
                 return RedirectToAction("Index","Home");
             }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            
+            var patientdtails = new PatientDetailsViewModel
+            {
+                Patient = _unitOfWork.Patient.GetPatientById(id),
+            };
+            return View(patientdtails);
+        }
+
+        public IActionResult Edit (int id)
+        {
+            var patientDetails = _unitOfWork.Patient.GetPatientById(id);
+
+            var model = new PatientRegisterViewModel
+            {
+                patient = patientDetails,
+
+            };
+            var genders = _unitOfWork.Gender.GetGenders();
+            foreach (var gender in genders)
+            {
+                model.GenderList.Add(new SelectListItem()
+                {
+                    Value = gender.GenderId.ToString(),
+                    Text = gender.GenderName
+                }
+
+                    );
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(PatientRegisterViewModel model)
+        {
+            var patiendObj = _unitOfWork.Patient.GetPatientById(model.patient.Id);
+            var patient = new Patient
+            {
+
+                Name = patiendObj.Name,
+                Address = patiendObj.Address,
+                Phone = patiendObj.Phone,
+                BirthDate = patiendObj.BirthDate,
+                Height = patiendObj.Height,
+                Weight = patiendObj.Weight,
+                
+                GenderId = patiendObj.Gender.GenderId,
+
+            };
+            _unitOfWork.Complete();
             return View();
         }
     }
