@@ -10,6 +10,7 @@ namespace Hospital.Models
         public int GenderId { get; set; }
 
         public string GenderName { get; set; }
+        public ICollection<Patient> patients { get; set; }
        
     }
 }

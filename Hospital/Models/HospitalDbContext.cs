@@ -20,5 +20,23 @@ namespace Hospital.Models
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Specialization> Specializations {get;set;}
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<Patient>()
+                .HasOne(p => p.Gender)
+                .WithMany(p => p.patients)
+                .HasForeignKey(p => p.GenderId); ;
+
+            modelBuilder.Entity<Doctor>()
+                .HasOne(p => p.Specialization)
+                .WithMany(p => p.doctors)
+                .HasForeignKey(p => p.SpecializationId);
+
+            base.OnModelCreating(modelBuilder);
+
+        }
+
     }
 }

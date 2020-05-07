@@ -21,7 +21,11 @@ namespace Hospital
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                options =>
+                options.SignIn.RequireConfirmedEmail = true
+                )
+                .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<HospitalDbContext>();
             /* services.AddScoped<IPatientRepository, PatientRepository>();*/
             services.AddScoped<IUnitOfWork, UnitOfWork>();
