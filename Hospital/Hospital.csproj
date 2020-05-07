@@ -15,4 +15,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\Doctor\" />
+    <Folder Include="Repositories\Gender\" />
+    <Folder Include="Repositories\Specialization\" />
+    <Folder Include="Repositories\Patient\" />
+  </ItemGroup>
+
 </Project>
