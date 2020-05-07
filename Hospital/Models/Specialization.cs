@@ -9,6 +9,7 @@ namespace Hospital.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public ICollection<Doctor> doctors { get; set; }
 
     }
 }
