@@ -106,7 +106,7 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Specialization", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("SpecializationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -114,7 +114,7 @@ namespace Hospital.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("SpecializationId");
 
                     b.ToTable("Specializations");
                 });

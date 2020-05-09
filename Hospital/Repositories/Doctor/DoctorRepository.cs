@@ -35,5 +35,10 @@ namespace Hospital.Repositories
         {
             _hospitalDbContext.Doctors.Add(doctor);
         }
+
+        public void Remove(Doctor doctor)
+        {
+           _hospitalDbContext.Doctors.Remove(doctor);
+        }
     }
 }

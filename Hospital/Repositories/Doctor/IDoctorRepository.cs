@@ -15,5 +15,6 @@ namespace Hospital.Repositories
         Doctor GetDoctorById(int id);
         /*  Doctor GetDoctorProfile();*/
         void Add(Doctor doctor);
+        void Remove(Doctor doctor);
     }
 }

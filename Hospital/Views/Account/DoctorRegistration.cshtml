@@ -1,59 +1,75 @@
 ﻿@model DoctorFormViewModel
-
-
-
-<h1>DoctorRegistration</h1>
-
-<h4>DoctorFormViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="DoctorRegistration">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="right_col" role="main" style="margin-top:-50%">
+    <div class="">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Patient <small>Regstration form elements</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
             </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.registerViewModel.Email" class="control-label"></label>
-                <input asp-for="@Model.registerViewModel.Email" class="form-control" />
-                <span asp-validation-for="@Model.registerViewModel.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="x_content">
+                <br>
+                <form id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" method="post" asp-controller="Account" asp-action="DoctorRegistration">
 
-                <label asp-for="Specialization" class=" control-label"></label>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="@Model.doctor.Name">
+                            Name
+                            <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input asp-for="@Model.doctor.Name" type="text" required="required" class="form-control ">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="@Model.doctor.SpecializationId">
+                            Specilization <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
 
-                <select asp-for="Specialization" asp-items="@Model.SpecializationList" class="form-control">
-                    <option>--Please select one--</option>
-                </select>
-                <span asp-validation-for="Specialization" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.registerViewModel.Password" class="control-label"></label>
-                <input asp-for="@Model.registerViewModel.Password" type="Password" class="form-control" />
-                <span asp-validation-for="@Model.registerViewModel.Password" class="text-danger"></span>
-            </div>
+                            <select asp-for="@Model.doctor.SpecializationId" asp-items="@Model.SpecializationList" class="form-control">
+                                <option>--Please select one--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label asp-for="@Model.doctor.Address" class="col-form-label col-md-3 col-sm-3 label-align"></label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input class="form-control" asp-for="@Model.doctor.Address" class="form-control " type="text" required='required'>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-danger" />
+                    <div class="item form-group">
+                        <label asp-for="@Model.doctor.Phone" class="col-form-label col-md-3 col-sm-3 label-align"></label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input asp-for="@Model.doctor.Phone" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="@Model.registerViewModel.Email" class="col-form-label col-md-3 col-sm-3 label-align"></label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input asp-for="@Model.registerViewModel.Email" id="middle-name" class="form-control" type="email">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label asp-for="@Model.registerViewModel.Password" class="col-form-label col-md-3 col-sm-3 label-align"></label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input asp-for="@Model.registerViewModel.Password" id="middle-name" class="form-control" type="password">
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="item form-group">
+                        <div class="col-md-6 col-sm-6 offset-md-3">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

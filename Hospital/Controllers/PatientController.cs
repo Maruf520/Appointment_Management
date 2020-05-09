@@ -19,7 +19,30 @@ namespace Hospital.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var  Patientts = new PatientViewModel();
+            var allPatient = _unitOfWork.Patient.GetPatients();
+            Patientts.Patients = allPatient.ToList();
+            /*            foreach (var item in allPatient)
+                        {
+                            Patientts.Patients.Add(new Patient() { 
+                            Phone = item.Phone,
+                            Name = item.Name,
+                            Token = item.Token,
+                            Gender = item.Gender,
+                            DateTime = item.DateTime,
+                            Id = item.Id,
+                            Height = item.Height,
+                            Weight = item.Weight,
+                            GenderId = item.GenderId,
+                            }); 
+                        }*/
+
+            /*                            foreach (var item in allPatient)
+                                        {
+                                            Patientts.Patients.Add(item);
+                                        }*/
+        /*    Patientts.Patients = allPatient.ToList();*/
+            return View(Patientts);
         }
 
         [HttpGet]
@@ -62,7 +85,7 @@ namespace Hospital.Controllers
                     BirthDate = model.patient.BirthDate,
                     Height = model.patient.Height,
                     Weight = model.patient.Weight,
-                    GenderId = model.patient.Gender.GenderId,
+                    GenderId = model.patient.GenderId,
                     Token = (year + sMonth + sDay + _unitOfWork.Patient.GetPatients().Count()).ToString(),
 
                 };
@@ -93,6 +116,7 @@ namespace Hospital.Controllers
                 patient = patientDetails,
 
             };
+            
             var genders = _unitOfWork.Gender.GetGenders();
             foreach (var gender in genders)
             {
@@ -109,9 +133,9 @@ namespace Hospital.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(PatientRegisterViewModel model)
+        public IActionResult Edit(int id,PatientRegisterViewModel model)
         {
-            var patiendObj = _unitOfWork.Patient.GetPatientById(model.patient.Id);
+            var patiendObj = _unitOfWork.Patient.GetPatientById(id);
             var patient = new Patient
             {
 
@@ -121,12 +145,21 @@ namespace Hospital.Controllers
                 BirthDate = patiendObj.BirthDate,
                 Height = patiendObj.Height,
                 Weight = patiendObj.Weight,
-                
-                GenderId = patiendObj.Gender.GenderId,
+
+                GenderId = patiendObj.GenderId,
 
             };
             _unitOfWork.Complete();
             return View();
         }
+       [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var patient = _unitOfWork.Patient.GetPatientById(id);
+            _unitOfWork.Patient.Remove(patient);
+            _unitOfWork.Complete();
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
