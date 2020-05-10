@@ -18,7 +18,7 @@ namespace Hospital.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private bool isPersistent;
-        private readonly ILogger<AccountController> logger;   
+        private readonly ILogger<AccountController> logger;
         private readonly IUnitOfWork _unitOfWork;
 
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IUnitOfWork unitOfWork, ILogger<AccountController> logger)
@@ -49,18 +49,18 @@ namespace Hospital.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var user = new IdentityUser {  UserName = model.Name, Email = model.Email };
-             
-                var result = await userManager.CreateAsync(user, model.Password); 
-                if(result.Succeeded)
+                var user = new IdentityUser { UserName = model.Name, Email = model.Email };
+
+                var result = await userManager.CreateAsync(user, model.Password);
+               if (result.Succeeded)
                 {
-                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var confirmationLink = Url.Action("ConfirmEmail","Account", new { userid=user.Id, token=token},Request.Scheme);
-                    logger.Log(LogLevel.Warning, confirmationLink);
+                   /* var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userid = user.Id, token = token }, Request.Scheme);
+                    logger.Log(LogLevel.Warning, confirmationLink);*/
                     await signInManager.SignInAsync(user, isPersistent = false);
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -93,59 +93,61 @@ namespace Hospital.Controllers
                                      usermail = await userManager.FindByNameAsync(model.Email);
                                 }
                                 */
-                var user = await userManager.FindByNameAsync(model.Email) ?? await userManager.FindByEmailAsync(model.Email);
-                if (user != null && !user.EmailConfirmed && await userManager.CheckPasswordAsync(user,model.Password))
-                {
-                    ModelState.AddModelError(string.Empty, "Email not confirmed");
-                    return View(model);
-                }
-                return RedirectToAction("Index", "Home");
-                var result = await signInManager.PasswordSignInAsync(user.Email, model.Password, model.RememberMe, false);
+                var user = await userManager.FindByEmailAsync(model.Email);
+                /*         if (user != null && !user.EmailConfirmed && await userManager.CheckPasswordAsync(user,model.Password))
+                         {
+                             ModelState.AddModelError(string.Empty, "Email not confirmed");
+                             return View(model);
+                         }
+                         return RedirectToAction("Index", "Home");
+                         */
+                var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-
+                    return RedirectToAction("Index","Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
 
             }
-            return View(model);
+            return View();
         }
 
-        public async Task<IActionResult> ConfirmEmail(string userId,string token)
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            if(userId == null || token == null )
+            if (userId == null || token == null)
             {
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             var user = await userManager.FindByIdAsync(userId);
-            if(user == null)
+            if (user == null)
             {
                 ViewBag.ErrorMessage = $"The user Id {userId} is not valid";
                 return View("NotFound");
             }
-            var result = await userManager.ConfirmEmailAsync(user,token);
-            if(result.Succeeded)
+            var result = await userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
             {
                 return View();
             }
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> DoctorRegistration()
         {
             var specializations = _unitOfWork.specializationRepository.GetSpecializations();
             var model = new DoctorFormViewModel();
-            foreach(var Specialization in specializations)
+            foreach (var Specialization in specializations)
             {
                 model.SpecializationList.Add(new SelectListItem()
                 {
-                    Value = Specialization.Id.ToString(),
+                    Value = Specialization.SpecializationId.ToString(),
 
-                    Text =  Specialization.Name
+                    Text = Specialization.Name
 
                 }
-                    
+
                     );
             }
 
@@ -156,34 +158,35 @@ namespace Hospital.Controllers
         [HttpPost]
         public async Task<IActionResult> DoctorRegistration(DoctorFormViewModel model)
         {
-            if(ModelState.IsValid)
+
+            var user = new ApplicationUser()
             {
-                var user = new ApplicationUser()
+                UserName = model.registerViewModel.Email,
+                Email = model.registerViewModel.Email,
+                IsActive = true
+
+            };
+            var result = await userManager.CreateAsync(user, model.registerViewModel.Password);
+
+            if (result.Succeeded)
+            {
+                var doctor = new Doctor()
                 {
-                    UserName = model.registerViewModel.Email,
-                    Email = model.registerViewModel.Email,
-                    IsActive = true
+                    Address = model.doctor.Address,
+                    Phone = model.doctor.Phone,
+                    SpecializationId = model.doctor.SpecializationId,
+                    Name = model.doctor.Name,
+                    IsAvailable = true,
 
                 };
-                var result = await userManager.CreateAsync(user, model.registerViewModel.Password);
+                _unitOfWork.doctorRepository.Add(doctor);
+                _unitOfWork.Complete();
+                return RedirectToAction("Index", "Home");
 
-                if(result.Succeeded)
-                {
-                    var doctor = new Doctor()
-                    {
-                        Address = model.Address,
-                        Phone = model.Phone,
-                        SpecializationId = model.Specialization,
-                        Name = model.Name,
-                        IsAvailable = true,
-
-                    };
-                    _unitOfWork.doctorRepository.Add(doctor);
-                    _unitOfWork.Complete();
-                }
+                
             }
             return View();
-        }
 
+        }
     }
 }

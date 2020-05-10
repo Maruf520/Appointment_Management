@@ -1,0 +1,64 @@
+﻿@model DoctorDetailsViewModel
+
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="clearfix"></div>
+
+        <div class="row" style="margin-top:-120%">
+
+            <div class="col-md-12 col-sm-12  ">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Stripped table <small>Stripped table subtitle</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Specialization</th>
+
+                                    <th>Contact</th>
+                                    <th>Address</th>
+                                    <th style="margin-left:500px">Action</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in @Model.doctor)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">@item.Name</th>
+
+                                        <td>@item.Specialization.Name</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Edit</a>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark"><i class="far fa-file-alt fa-lg"></i>Details</a>
+
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="far fa-trash-alt fa-lg"></i>Delete</a>
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            }
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,7 +7,7 @@ namespace Hospital.Models
 {
     public class Specialization
     {
-        public int Id { get; set; }
+        public int SpecializationId { get; set; }
         public string Name { get; set; }
         public ICollection<Doctor> doctors { get; set; }
 
