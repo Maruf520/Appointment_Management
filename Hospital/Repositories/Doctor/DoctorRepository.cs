@@ -18,17 +18,17 @@ namespace Hospital.Repositories
 
         public IEnumerable<Doctor> GetDoctors()
         {
-            return _hospitalDbContext.Doctors.Include(s => s.Specialization);
+            return _hospitalDbContext.Doctors.Include(s => s.doctorSpecializations);
         }
 
         public IEnumerable<Doctor> GetAvailableDoctors()
         {
-            return _hospitalDbContext.Doctors.Include(c => c.Specialization).Where(a => a.IsAvailable == true);
+            return _hospitalDbContext.Doctors.Include(c => c.doctorSpecializations).Where(a => a.IsAvailable == true);
         }
 
         public Doctor GetDoctorById(int id)
         {
-            return _hospitalDbContext.Doctors.Include(s => s.Specialization).SingleOrDefault(d => d.Id == id);
+            return _hospitalDbContext.Doctors.Include(s => s.doctorSpecializations).SingleOrDefault(d => d.Id == id);
         }
 
         public void Add(Doctor doctor)

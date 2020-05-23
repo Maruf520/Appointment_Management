@@ -20,7 +20,7 @@ namespace Hospital.ViewModels
  
         public Doctor doctor { get; set; }
 
-
+        public List<int> SelectedeSepcializationId { get; set; }
         public RegisterViewModel registerViewModel { get; set; }
     }
 }

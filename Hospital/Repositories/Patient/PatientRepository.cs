@@ -39,5 +39,9 @@ namespace Hospital.Models
         {
             _hospitalDbContext.Patients.Remove(patient);
         }
+        public void Update(Patient patient)
+        {
+            _hospitalDbContext.Patients.Update(patient);
+        }
     }
 }

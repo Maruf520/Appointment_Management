@@ -6,21 +6,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Hospital.Models;
+using Hospital.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+         private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var userid = _userManager.GetUserId(HttpContext.User);
+            var userdetails = new ProfileViewModel
+            {
+                Id = userid
+            };
+            
+            return View(userdetails);
         }
 
         public IActionResult Privacy()

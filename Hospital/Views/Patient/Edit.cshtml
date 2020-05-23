@@ -1,80 +1,68 @@
 ﻿@model PatientRegisterViewModel
-<div class="right_col" role="main" style="margin-top:-50%">
-    <div class="">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2>Patient <small>Regstration form elements</small></h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li>
-                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-                <br>
-                <form id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" method="post" asp-controller="Patient" asp-action="Edit">
+<div class="content-wrapper">
+    <section class="content" style="margin-top:-81%">
 
-                    <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="@Model.patient.Name">
-                            Name
-                            <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input asp-for="@Model.patient.Name" type="text" required="required" class="form-control ">
-                        </div>
+        <!-- SELECT2 EXAMPLE -->
+        <form asp-action="Edit" asp-controller="Patient">
+            <div class="box ">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Update Patient's Info </h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
                     </div>
-                    <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align">
-                            Gender <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 ">
+                </div><!-- /.box-header -->
 
-                            <select asp-for="@Model.patient.GenderId" asp-items="@Model.GenderList" class="form-control">
-                                <option>--Please select one--</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label asp-for="@Model.patient.BirthDate" class="col-form-label col-md-3 col-sm-3 label-align"></label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input class="form-control" asp-for="@Model.patient.BirthDate" class='date' type="date" name="date" required='required'>
-                        </div>
-                    </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <input asp-for="@Model.patient.Id" type="hidden" />
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" asp-for="@Model.patient.Name" class="form-control select2" />
+                            </div><!-- /.form-group -->
+                            <div class="form-group">
+                                <label>Date Of Birth</label>
+                                <input type="date" asp-for="@Model.patient.BirthDate" class="form-control select2" />
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" asp-for="@Model.patient.Phone" class="form-control select2" />
+                            </div>
+                            <div class="form-group">
+                                <label>Height</label>
+                                <input type="text" asp-for="@Model.patient.Height" class="form-control select2" />
+                            </div>
 
-                    <div class="item form-group">
-                        <label asp-for="@Model.patient.Phone" class="col-form-label col-md-3 col-sm-3 label-align"></label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input asp-for="@Model.patient.Phone" class="form-control" type="text">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label asp-for="@Model.patient.Address" class="col-form-label col-md-3 col-sm-3 label-align"></label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input asp-for="@Model.patient.Address" id="middle-name" class="form-control" type="text">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label asp-for="@Model.patient.Height" class="col-form-label col-md-3 col-sm-3 label-align"></label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input asp-for="@Model.patient.Height" id="middle-name" class="form-control" type="text">
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label asp-for="@Model.patient.Weight" class="col-form-label col-md-3 col-sm-3 label-align"></label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input asp-for="@Model.patient.Weight" id="middle-name" class="form-control" type="text">
-                        </div>
-                    </div>
-                    <div class="ln_solid"></div>
-                    <div class="item form-group">
-                        <div class="col-md-6 col-sm-6 offset-md-3">
-                            <button type="submit" class="btn btn-success">Update</button>
-                        </div>
-                    </div>
+                        </div><!-- /.col -->
 
-                </form>
-            </div>
-        </div>
-    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select asp-for="@Model.patient.GenderId" asp-items="@Model.GenderList" class="form-control select2">
+                                    <option>--Please select one--</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" asp-for="@Model.patient.Address" class="form-control select2" />
+                            </div>
+                            <div class="form-group">
+                                <label>Weight</label>
+                                <input type="text" asp-for="@Model.patient.Weight" class="form-control select2" />
+                            </div>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.box-body -->
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </div>
+                </div>
+            </div><!-- /.box -->
+        </form>
+
+
+
+    </section>
 </div>

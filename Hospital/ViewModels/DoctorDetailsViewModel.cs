@@ -10,5 +10,6 @@ namespace Hospital.ViewModels
     {
         public Doctor Doctor { get; set; }
         public List<Doctor> doctor { get; set; }
+        public string specializationName { get; set; }
     }
 }

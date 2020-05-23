@@ -1,6 +1,7 @@
 ﻿using Hospital.IRepositories;
 using Hospital.Models;
 using Hospital.Repositories;
+using Hospital.Repositories.Appointments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Hospital
         public IGenderRepository Gender { get; private set; }
         public IDoctorRepository doctorRepository { get; private set; }
         public ISpecializationRepository specializationRepository { get; private set; }
+        public IAppoinmentRepository appoinmentRepository { get;private set; }
 
 
 
@@ -27,6 +29,7 @@ namespace Hospital
             Gender = new GenderRepository(context);
             doctorRepository = new DoctorRepository(context);
             specializationRepository = new SpecializationRepository(context);
+            appoinmentRepository = new AppoinmentRepository(context);
         }
 
         public void Complete()

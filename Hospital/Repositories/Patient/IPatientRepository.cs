@@ -12,6 +12,7 @@ namespace Hospital.Models
         Patient GetPatientById(int id);
         void Add(Patient  patient);
         void Remove(Patient patient);
+        void Update(Patient patient);
 
     }
 }

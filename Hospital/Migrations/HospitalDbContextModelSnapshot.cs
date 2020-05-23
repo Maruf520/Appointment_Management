@@ -19,6 +19,37 @@ namespace Hospital.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Hospital.Models.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("contactStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appoinments");
+                });
+
             modelBuilder.Entity("Hospital.Models.Doctor", b =>
                 {
                     b.Property<int>("Id")
@@ -43,9 +74,22 @@ namespace Hospital.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SpecializationId");
-
                     b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("Hospital.Models.DoctorSpecialization", b =>
+                {
+                    b.Property<int>("SpecializationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SpecializationId", "DoctorId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorSpecializations");
                 });
 
             modelBuilder.Entity("Hospital.Models.Gender", b =>
@@ -315,10 +359,31 @@ namespace Hospital.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Hospital.Models.Doctor", b =>
+            modelBuilder.Entity("Hospital.Models.Appointment", b =>
                 {
+                    b.HasOne("Hospital.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Models.DoctorSpecialization", b =>
+                {
+                    b.HasOne("Hospital.Models.Doctor", "Doctor")
+                        .WithMany("doctorSpecializations")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Hospital.Models.Specialization", "Specialization")
-                        .WithMany("doctors")
+                        .WithMany("doctorSpecializations")
                         .HasForeignKey("SpecializationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

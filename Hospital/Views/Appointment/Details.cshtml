@@ -1,0 +1,49 @@
+﻿@model AppointmentDetailsViewModel
+
+    <div class="content-wrapper">
+        <section class="content" style="margin-top:-77%">
+            <div class="box ">
+                <div class="box-header with-border">
+                    <h3 class="box-title"> Appointment Details </h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="card" style="width: 50rem; margin-left:30%;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size:1.5rem;">Name :  @Model.Appointment.Patient.Name</h5>
+
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Token : @Model.Appointment.Patient.Token</li>
+                        <li class="list-group-item">Address : @Model.Appointment.Patient.Address</li>
+                        <li class="list-group-item">Details : @Model.Appointment.Details</li>
+                        <li class="list-group-item">Date : @Model.Appointment.DateTime.Date.ToString("dd/MM/yyyy")</li>
+                        <li class="list-group-item">Date : @Model.Appointment.DateTime.ToShortTimeString()</li>
+                        <li class="list-group-item">Phone : @Model.Appointment.Patient.Phone</li>
+                    </ul>
+                    <input asp-for="@Model.appointmentId" type="hidden" />
+
+                </div>
+
+                @{
+                    @if (Model.Appointment.contactStatus == ContactStatus.Approved || Model.Appointment.contactStatus == ContactStatus.Rejected)
+                    {
+                        <div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <a asp-controller="Appointment" asp-action="Approval" asp-route-Id="@Model.Appointment.Id" name="Approve" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Approve</a>
+                            <a asp-controller="Appointment" asp-action="Rejection" asp-route-Id="@Model.Appointment.PatientId" class="btn btn-danger"><i class="fa fa-marker fa-lg"></i>Reject</a>
+                        </div>
+                    }
+
+                }
+            </div>
+
+        </section>
+    </div>
