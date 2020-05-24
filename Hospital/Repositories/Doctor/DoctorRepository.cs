@@ -20,6 +20,10 @@ namespace Hospital.Repositories
         {
             return _hospitalDbContext.Doctors.Include(s => s.doctorSpecializations);
         }
+        public IEnumerable<Doctor> GetDoctorList()
+        {
+            return _hospitalDbContext.Doctors;
+        }
 
         public IEnumerable<Doctor> GetAvailableDoctors()
         {

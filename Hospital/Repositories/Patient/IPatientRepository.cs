@@ -8,7 +8,8 @@ namespace Hospital.Models
     public interface IPatientRepository
     {
         IEnumerable<Patient> GetPatients();
-/*       IEnumerable<Patient> GetRecentPatients();*/
+        /*       IEnumerable<Patient> GetRecentPatients();*/
+        IEnumerable<Patient> GetPatientList();
         Patient GetPatientById(int id);
         void Add(Patient  patient);
         void Remove(Patient patient);

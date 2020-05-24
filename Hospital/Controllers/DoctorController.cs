@@ -23,25 +23,14 @@ namespace Hospital.Controllers
         
         public IActionResult Index()
         {
-            var allDoctor = _context.Doctors;
 /*            var model = new DoctorDetailsViewModel();
             model.doctor = allDoctor.ToList();*/
-            var adoc = allDoctor.ToList();
-            /*            ViewBag.specialization = _context.DoctorSpecializations.Include(c => c.Specialization).Select(s => new DoctorDetailsViewModel
-                        {
-                            specializationName = s.Specialization.Name
-                        });
-            */
-
-
             return View();
         }
         [HttpGet]
         public IActionResult display()
         {
-            var allDoctor = _context.Doctors;
-            /*            var model = new DoctorDetailsViewModel();
-                        model.doctor = allDoctor.ToList();*/
+            var allDoctor = _unitOfWork.doctorRepository.GetDoctorList();
             var adoc = allDoctor.ToList();
             return Json(new {  data = adoc});
         }
@@ -206,6 +195,22 @@ namespace Hospital.Controllers
         {
             var al = _context.Doctors.ToList();
             return new JsonResult(al);
+        }
+        [HttpGet]
+        public IActionResult DoctorAvailability(int id)
+        {
+            var doctor = _unitOfWork.doctorRepository.GetDoctorById(id);
+            if(doctor.IsAvailable == true)
+            {
+                doctor.IsAvailable = false;
+            }
+            else
+            {
+                doctor.IsAvailable = true;
+            }
+            
+            _unitOfWork.Complete();
+            return RedirectToAction("Details", "Doctor", new { id });
         }
 
     }

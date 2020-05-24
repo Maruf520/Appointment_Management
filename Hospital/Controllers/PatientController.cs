@@ -45,6 +45,12 @@ namespace Hospital.Controllers
             return View(Patientts);
         }
 
+        public IActionResult displayPatient()
+        {
+           var  allPatient = _unitOfWork.Patient.GetPatientList();
+            return Json(new { data = allPatient.ToList() });
+        }
+
         [HttpGet]
         public IActionResult RegisterPatient()
         {
