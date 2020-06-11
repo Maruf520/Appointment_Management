@@ -19,6 +19,8 @@ namespace Hospital.Models
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Specialization> Specializations {get;set;}
+        public DbSet<Appointment> Appoinments { get; set; }
+        public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,14 +31,27 @@ namespace Hospital.Models
                 .WithMany(p => p.patients)
                 .HasForeignKey(p => p.GenderId); ;
 
-            modelBuilder.Entity<Doctor>()
+
+            modelBuilder.Entity<DoctorSpecialization>()
+                .HasKey(x => new { x.SpecializationId, x.DoctorId });
+
+
+            modelBuilder.Entity<DoctorSpecialization>()
+                .HasOne(p => p.Doctor)
+                .WithMany(p => p.doctorSpecializations)
+                .HasForeignKey(p => p.DoctorId);
+
+
+            modelBuilder.Entity<DoctorSpecialization>()
                 .HasOne(p => p.Specialization)
-                .WithMany(p => p.doctors)
-                .HasForeignKey(p => p.SpecializationId);
+                .WithMany(p => p.doctorSpecializations)
+                .HasForeignKey(p => p.SpecializationId); ;
+
+
 
             base.OnModelCreating(modelBuilder);
 
         }
-
+         
     }
 }

@@ -9,6 +9,7 @@ namespace Hospital.Repositories
     public interface IDoctorRepository
     {
         IEnumerable<Doctor> GetDoctors();
+        IEnumerable<Doctor> GetDoctorList();
 
         IEnumerable<Doctor> GetAvailableDoctors();
 

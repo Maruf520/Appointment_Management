@@ -45,6 +45,12 @@ namespace Hospital.Controllers
             return View(Patientts);
         }
 
+        public IActionResult displayPatient()
+        {
+           var  allPatient = _unitOfWork.Patient.GetPatientList();
+            return Json(new { data = allPatient.ToList() });
+        }
+
         [HttpGet]
         public IActionResult RegisterPatient()
         {
@@ -133,24 +139,28 @@ namespace Hospital.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id,PatientRegisterViewModel model)
+        public IActionResult Edit(PatientRegisterViewModel model)
         {
-            var patiendObj = _unitOfWork.Patient.GetPatientById(id);
-            var patient = new Patient
+            if (ModelState.IsValid)
             {
 
-                Name = patiendObj.Name,
-                Address = patiendObj.Address,
-                Phone = patiendObj.Phone,
-                BirthDate = patiendObj.BirthDate,
-                Height = patiendObj.Height,
-                Weight = patiendObj.Weight,
 
-                GenderId = patiendObj.GenderId,
+                var patientObj = _unitOfWork.Patient.GetPatientById(model.patient.Id);
+                patientObj.Name = model.patient.Name;
+                patientObj.Address = model.patient.Address;
+                patientObj.Phone = model.patient.Phone;
+                patientObj.GenderId = model.patient.GenderId;
+                patientObj.Weight = model.patient.Weight;
+                patientObj.Height = model.patient.Height;
+                patientObj.BirthDate = model.patient.BirthDate;
 
-            };
-            _unitOfWork.Complete();
-            return View();
+                /*                _unitOfWork.Patient.Update(model.patient);*/
+                _unitOfWork.Complete();
+
+            }
+            return RedirectToAction("Details", "Patient", new { @id = model.patient.Id });
+             return RedirectToAction(nameof(Index));
+
         }
        [HttpGet]
         public async Task<IActionResult> Delete(int id)

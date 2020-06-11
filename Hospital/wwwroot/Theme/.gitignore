@@ -1,4 +1,9 @@
-nbproject
-npm-debug.log
-node_modules
-.sass-cache
+*.DS_Store
+.idea
+/nbproject/private/
+/nbproject/
+/node_modules/
+TODO
+*.zip
+test.html
+*.log

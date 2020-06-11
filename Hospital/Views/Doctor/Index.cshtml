@@ -1,64 +1,110 @@
-﻿@model DoctorDetailsViewModel
+﻿
+<div class="content-wrapper">
+    <section class="content" style="margin-top:-75%">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">All Patients</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
 
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box">
+                            <div class="box-header">
 
-<div class="right_col" role="main">
-    <div class="">
-        <div class="clearfix"></div>
+                                <div class="box-tools">
+                                </div>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table id="example" class="table table-hover">
+                                    <thead>
+                                        <tr>
 
-        <div class="row" style="margin-top:-120%">
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                     
+                                            <th>Edit</th>
+                                            <th>Details</th>
+                                            <th>Delete</th>
 
-            <div class="col-md-12 col-sm-12  ">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>Stripped table <small>Stripped table subtitle</small></h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li>
-                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                            </li>
-                            <li>
-                                <a class="close-link"><i class="fa fa-close"></i></a>
-                            </li>
-                        </ul>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Specialization</th>
-
-                                    <th>Contact</th>
-                                    <th>Address</th>
-                                    <th style="margin-left:500px">Action</th>
-                                </tr>
-                            </thead>
-                            @foreach (var item in @Model.doctor)
-                            {
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">@item.Name</th>
-
-                                        <td>@item.Specialization.Name</td>
-                                        <td>@item.Phone</td>
-                                        <td>@item.Address</td>
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Edit</a>
-                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark"><i class="far fa-file-alt fa-lg"></i>Details</a>
-
-                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="far fa-trash-alt fa-lg"></i>Delete</a>
-
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            }
-                        </table>
-
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css" />
+
+
+@section scripts{
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+
+    <script>
+
+    $(document).ready(function () {
+
+    $(" #example").DataTable({
+
+    "ajax" : {
+    "url" : "/Doctor/display" ,
+    "type" : "Get" ,
+    "datatype" : "json"
+        },
+        //this is for hide column
+@*                "columnDefs": [{
+            "targets": [0],
+            "visible": false,
+            "searchable": true
+        }],*@
+    "columns" : [
+    
+    { "data" : "name" },
+    { "data" : "address" },
+    { "data" : "phone" },
+   
+    {
+    "render" : function (data, type, full, meta) { return '<a class="btn btn-info" href="/Doctor/Edit/' + full.id + '">Edit</a>' ; }
+        },
+        {
+            "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Doctor/Details/' + full.id + '">Details</a>'; }
+        },
+        {
+            "render": function (data, type, full, meta) { return '<a class="btn btn-danger" href="/Doctor/Delete/' + full.id + '">Delete</a>'; }
+        },           
+    ]
+    });
+    });
+    function DeleteData(id ) {
+        if (confirm("Are you sure you want to delete ...?")) {
+                Delete(id);
+            } else {
+                return false;
+            }
+        }
+    function Delete(id) {
+            var url = '@Url.Content("~/")' + "Doctor/Delete";
+
+            $.post(url, {ID: id }, function(data) {
+                if (data) {
+                    oTable = $('#example').DataTable();
+                    oTable.draw();
+                } else {
+                    alert("Something Went Wrong!");
+                }
+            });
+        }
+    
+    </script>
+
+} 

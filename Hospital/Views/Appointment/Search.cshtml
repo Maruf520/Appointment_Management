@@ -1,0 +1,56 @@
+﻿@model AppointmentViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="content-wrapper">
+    <section class="content" style="margin-top:-81%">
+
+        <!-- SELECT2 EXAMPLE -->
+        <form asp-action="SearchList" asp-controller="Appointment">
+            <div class="box ">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Search  Appointment </h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div><!-- /.box-header -->
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select asp-for="StringName" class="form-control select2">
+                                    <option>--Please select one--</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+
+
+                        </div><!-- /.col -->
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input asp-for="@Model.Date" type="date" class="form-control select2" />
+                            </div>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.box-body -->
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            </div><!-- /.box -->
+        </form>
+
+
+
+    </section>
+</div>
+

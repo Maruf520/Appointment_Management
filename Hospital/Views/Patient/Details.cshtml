@@ -1,84 +1,34 @@
 ﻿@model PatientDetailsViewModel
 
-@{
-    ViewData["Title"] = "Details";
-}
+<div class="content-wrapper">
+    <section class="content" style="margin-top:-77%">
+        <div class="box ">
+            <div class="box-header with-border">
+                <h3 class="box-title"> Patient Details </h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                </div>
+            </div>
+            <div class="card" style="width: 50rem; margin-left:30%;">
+                <div class="card-body">
+                    <h5 class="card-title">Name :  @Model.Patient.Name</h5>
 
-<h1>Details</h1>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Address : @Model.Patient.Token</li>
+                    <li class="list-group-item">Address : @Model.Patient.Address</li>
+                    <li class="list-group-item">Phone : @Model.Patient.Phone</li>
+                    <li class="list-group-item">Address : @Model.Patient.Height</li>
+                    <li class="list-group-item">Address : @Model.Patient.Weight</li>
 
-<div>
-    <h4>Patient</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Token)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Token)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.GenderId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.GenderId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.BirthDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.BirthDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.DateTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.DateTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Height)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Height)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Weight)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Weight)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient.Age)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.Age)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+                </ul>
+
+            </div>
+            <a asp-controller="Patient" asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Edit</a>
+            <a asp-controller="Appointment" asp-action="Create" asp-route-id="@Model.Patient.Id" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Appointment</a>
+        </div>
+
+    </section>
+    </div>

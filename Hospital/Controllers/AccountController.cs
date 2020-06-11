@@ -34,12 +34,12 @@ namespace Hospital.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return View();
+            return RedirectToAction("Login", "Account");
         }
-
         [HttpGet]
         public async Task<IActionResult> Register()
         {
@@ -111,6 +111,51 @@ namespace Hospital.Controllers
 
             }
             return View();
+        }
+
+        public async Task<IActionResult> Update()
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            var model = new ProfileViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update (ProfileViewModel model)
+        {
+            var user = await userManager.FindByIdAsync(model.Id);
+
+            if(user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {model.Id} cannot be found";
+                return View("NotFound");
+            }
+            else
+            {
+                user.Email = model.Email;
+                user.UserName = model.UserName;
+
+                var result = await userManager.UpdateAsync(user);
+
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("Index","Home");
+                }
+
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("",error.Description);
+                }
+                return View(model);
+            }
+
+            
         }
 
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -188,5 +233,43 @@ namespace Hospital.Controllers
             return View();
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult>Edit(int id)
+        {
+            var specializations = _unitOfWork.specializationRepository.GetSpecializations();
+            var doctorObj = _unitOfWork.doctorRepository.GetDoctorById(id);
+            var model = new DoctorFormViewModel
+            {
+                doctor = doctorObj
+            };
+         
+            foreach (var specialization in specializations)
+            {
+                model.SpecializationList.Add(new SelectListItem()
+                {
+                    Value = specialization.SpecializationId.ToString(),
+
+                    Text = specialization.Name
+                }); ;
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(DoctorFormViewModel model)
+        {
+            var user = _unitOfWork.doctorRepository.GetDoctorById(model.doctor.Id);
+            user.Name = model.doctor.Name;
+            user.Phone = model.doctor.Phone;
+            user.Address = model.doctor.Address;
+            user.SpecializationId = model.doctor.SpecializationId;
+
+            _unitOfWork.Complete();
+
+            return RedirectToAction("Index","Doctor");
+        }
+
+
     }
 }

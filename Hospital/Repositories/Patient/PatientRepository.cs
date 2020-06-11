@@ -29,6 +29,10 @@ namespace Hospital.Models
         {
             return _hospitalDbContext.Patients.Include(c => c.Gender);
         }
+        public IEnumerable<Patient> GetPatientList ()
+        {
+            return _hospitalDbContext.Patients;
+        }
 
 /*        public IEnumerable<Patient> GetRecentPatients()
         {
@@ -38,6 +42,10 @@ namespace Hospital.Models
         public void Remove(Patient patient)
         {
             _hospitalDbContext.Patients.Remove(patient);
+        }
+        public void Update(Patient patient)
+        {
+            _hospitalDbContext.Patients.Update(patient);
         }
     }
 }
