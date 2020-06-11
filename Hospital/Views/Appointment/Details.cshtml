@@ -20,7 +20,7 @@
                         <li class="list-group-item">Address : @Model.Appointment.Patient.Address</li>
                         <li class="list-group-item">Details : @Model.Appointment.Details</li>
                         <li class="list-group-item">Date : @Model.Appointment.DateTime.Date.ToString("dd/MM/yyyy")</li>
-                        <li class="list-group-item">Date : @Model.Appointment.DateTime.ToShortTimeString()</li>
+                        <li class="list-group-item">Time : @Model.Appointment.DateTime.ToShortTimeString()</li>
                         <li class="list-group-item">Phone : @Model.Appointment.Patient.Phone</li>
                     </ul>
                     <input asp-for="@Model.appointmentId" type="hidden" />

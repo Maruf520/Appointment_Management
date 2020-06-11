@@ -2,7 +2,10 @@
 using Hospital.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +16,13 @@ namespace Hospital.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AppointmentController> _logger;
-        public AppointmentController(IUnitOfWork unitOfWork, ILogger<AppointmentController> logger)
+        private readonly HospitalDbContext _context;
+        public AppointmentController(IUnitOfWork unitOfWork, HospitalDbContext context, ILogger<AppointmentController> logger)
         {
             _unitOfWork = unitOfWork;
 
             _logger = logger;
+            _context = context;
         }
 
 
@@ -141,7 +146,62 @@ namespace Hospital.Controllers
 
 
     }
+
+        public ViewResult List(string appointment)
+        {
+            /*            var result = _unitOfWork.appoinmentRepository.GetAppoinments();
+
+                         IEnumerable<Appointment> appointments;
+                        if (ModelState.IsValid) { 
+                            if (appointment == "approved")
+                            {
+                                appointments = result.Where(c => c.contactStatus == ContactStatus.Approved);
+
+                            }
+                            if( appointment == "rejected")
+                            {
+                                appointments = result.Where(c => c.contactStatus == ContactStatus.Rejected);
+                            }
+
+
+                            var viewmodel = new AppointmentViewModel
+                            {
+                                Appointmentss = appointments,
+                            };
+
+
+                        }*/
+
+            var app = _unitOfWork.appoinmentRepository.FilterAppointments(appointment);
+
+            var viewmodel = new AppointmentViewModel
+            {
+                Appointment = app,
+            };
+
+            return View(viewmodel);
+        }
+
+        public async Task<IActionResult> Search()
+        {
+            return View();
+        }
+        public IActionResult SearchList()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SearchList(AppointmentViewModel model)
+        {
+            var result = _unitOfWork.appoinmentRepository.CustomFilterAppointment(model.StringName, model.Date);
+
+            var viewmodel = new AppointmentViewModel
+            {
+                Appointment = result
+            };
+            
+            return View(viewmodel);
+        }
 }
 }
 
-/*merge seperate date & Time in Model asp.net core*/

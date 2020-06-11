@@ -11,6 +11,8 @@ namespace Hospital.Repositories.Appointments
         IEnumerable<Appointment> GetAppoinments();
         IEnumerable<Appointment> GetAppointmentWithPatients(int id);
         IEnumerable<Appointment> AppointmentByDoctor(int id);
+        IQueryable <Appointment> FilterAppointments(string appointment);
+        IQueryable<Appointment> CustomFilterAppointment(string name, DateTime date);
         Appointment GetAppointmentById(int id);
         void Update(Appointment appointment);
         void Add(Appointment appointment);

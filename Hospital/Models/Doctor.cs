@@ -12,6 +12,8 @@ namespace Hospital.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        [Required]
+        [RegularExpression(@"(^([+]{1}[8]{2}|0088)?(01){1}[3-9]{1}\d{8})$")]
         public string Phone { get; set; }
         public bool IsAvailable { get; set; }
         public string Address { get; set; }

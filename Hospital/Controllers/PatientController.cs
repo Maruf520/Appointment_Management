@@ -159,7 +159,7 @@ namespace Hospital.Controllers
 
             }
             return RedirectToAction("Details", "Patient", new { @id = model.patient.Id });
-            /* return RedirectToAction(nameof(Index));*/
+             return RedirectToAction(nameof(Index));
 
         }
        [HttpGet]

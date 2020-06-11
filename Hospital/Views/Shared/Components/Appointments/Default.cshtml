@@ -1,0 +1,26 @@
+﻿<li class="dropdown notifications-menu" style="column-width:100px">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        
+        <span class="hidden-xs">Appointments</span>
+    </a>
+    <ul class="dropdown-menu">
+        <li class="header">Search Your Appointments </li>
+        <li>
+            <!-- inner menu: contains the actual data -->
+            <ul class="menu">
+                
+                <li>
+                    <a asp-controller="Appointment" asp-action="List" asp-route-appointment="today"><i class="fa fa-users text-aqua"></i> Today's Appointment</a>
+                </li>
+                <li>
+                    <a asp-controller="Appointment" asp-action="List" asp-route-appointment="approved"><i class="fa fa-users text-aqua"></i> Approved Appointment</a>
+                </li>
+                <li>
+                    <a asp-controller="Appointment" asp-action="List" asp-route-appointment="rejected"><i class="fa fa-users text-aqua"></i> Rejected Appointment</a>
+                </li>
+
+            </ul>
+        </li>
+        <li class="footer"><a asp-controller="Appointment" asp-action="Search" >Custom  Search</a></li>
+    </ul>
+</li>

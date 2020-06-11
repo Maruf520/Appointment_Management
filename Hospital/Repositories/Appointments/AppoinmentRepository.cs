@@ -1,4 +1,5 @@
 ﻿using Hospital.Models;
+using Hospital.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,5 +50,53 @@ namespace Hospital.Repositories.Appointments
         {
             _hospitalDbContext.Appoinments.Update(appointment);
         }
+
+        public IQueryable< Appointment> FilterAppointments(string appointment)
+        {
+            var result = _hospitalDbContext.Appoinments.Include(c => c.Doctor).Include(s => s.Patient).AsQueryable();
+            if(appointment != null)
+            {
+                if(appointment == "approved")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Approved);
+                }
+                else if(appointment == "rejected")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Rejected);
+                }
+                else if (appointment == "pending")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Submitted);
+                }
+                else if (appointment == "today")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Approved && c.DateTime.Year == DateTime.Now.Year && c.DateTime.Month == DateTime.Now.Month && c.DateTime.Day == DateTime.Now.Day);
+                }
+            }
+            return result;
+        }
+
+        public IQueryable<Appointment> CustomFilterAppointment(string  name, DateTime  date)
+        { 
+            var result = _hospitalDbContext.Appoinments.Include(c => c.Doctor).Include(c => c.Patient).AsQueryable();
+            if(name != null && date != null)
+            {
+                if(name == "pending")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Submitted && c.DateTime.Date == date);
+                }
+                else if (name == "approved")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Approved && c.DateTime.Date == date);
+                }
+                else if (name == "rejected")
+                {
+                    result = result.Where(c => c.contactStatus == ContactStatus.Rejected && c.DateTime.Date == date);
+                }
+            }
+
+            return result;
+        }
+
     }
 }

@@ -23,6 +23,7 @@
                             <div class="form-group">
                                 <label>Phone</label>
                                 <input type="text" asp-for="@Model.doctor.Phone" class="form-control select2" />
+                                <span asp-validation-for="@Model.doctor.Phone" class="text-danger"></span>
                             </div>
                         </div><!-- /.col -->
 
@@ -30,7 +31,6 @@
                             <div class="form-group">
                                 <label>Multiple</label>
                                 <select asp-for="@Model.SelectedeSepcializationId" asp-items="@Model.SpecializationList" class="form-control select2" multiple="multiple" data-placeholder="Select a State">
-       
                                 </select>
                             </div><!-- /.form-group -->
                             <div class="form-group">
@@ -53,3 +53,7 @@
 
     </section>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
