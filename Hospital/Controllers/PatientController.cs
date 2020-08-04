@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Presentation;
 using Hospital.Models;
 using Hospital.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static Hospital.Models.Patient;
 
 namespace Hospital.Controllers
 {
@@ -56,18 +59,22 @@ namespace Hospital.Controllers
         {
 
             var ViewModel = new PatientRegisterViewModel();
-            var genders = _unitOfWork.Gender.GetGenders();
-            foreach(var gender in genders)
+            var gen = new List<SelectListItem>();
+
+            gen.Add(new SelectListItem()
             {
-                ViewModel.GenderList.Add(new SelectListItem()
-                {
-                    Value = gender.GenderId.ToString(),
-                    Text = gender.GenderName
-                }
-                    
-                    );
+                Text = "Select",
+                Value = ""
             }
-            return View(ViewModel);
+                );
+
+            foreach (Gender item in Enum.GetValues(typeof(Gender)))
+            {
+                gen.Add(new SelectListItem { Text = Enum.GetName(typeof(Gender), item), Value = item.ToString() });
+            }
+            ViewBag.gender = gen;
+            
+            return View();
         }
 
         [HttpPost]
@@ -103,7 +110,7 @@ namespace Hospital.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int id)
+        public IActionResult Details(string id)
         {
             
             var patientdtails = new PatientDetailsViewModel
@@ -113,7 +120,7 @@ namespace Hospital.Controllers
             return View(patientdtails);
         }
 
-        public IActionResult Edit (int id)
+        public IActionResult Edit (string id)
         {
             var patientDetails = _unitOfWork.Patient.GetPatientById(id);
 
@@ -123,7 +130,7 @@ namespace Hospital.Controllers
 
             };
             
-            var genders = _unitOfWork.Gender.GetGenders();
+/*            var genders = _unitOfWork.Gender.GetGenders();
             foreach (var gender in genders)
             {
                 model.GenderList.Add(new SelectListItem()
@@ -133,7 +140,7 @@ namespace Hospital.Controllers
                 }
 
                     );
-            }
+            }*/
 
             return View(model);
         }
@@ -145,7 +152,7 @@ namespace Hospital.Controllers
             {
 
 
-                var patientObj = _unitOfWork.Patient.GetPatientById(model.patient.Id);
+                var patientObj = _unitOfWork.Patient.GetPatientById(model.patient.PatientId);
                 patientObj.Name = model.patient.Name;
                 patientObj.Address = model.patient.Address;
                 patientObj.Phone = model.patient.Phone;
@@ -158,12 +165,12 @@ namespace Hospital.Controllers
                 _unitOfWork.Complete();
 
             }
-            return RedirectToAction("Details", "Patient", new { @id = model.patient.Id });
+            return RedirectToAction("Details", "Patient", new { @id = model.patient.PatientId });
              return RedirectToAction(nameof(Index));
 
         }
        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var patient = _unitOfWork.Patient.GetPatientById(id);
             _unitOfWork.Patient.Remove(patient);

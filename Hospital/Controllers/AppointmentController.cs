@@ -1,14 +1,20 @@
-﻿using Hospital.Models;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
+using Hospital.Models;
 using Hospital.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using static Hospital.Models.Patient;
 
 namespace Hospital.Controllers
 {
@@ -16,20 +22,25 @@ namespace Hospital.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AppointmentController> _logger;
-        private readonly HospitalDbContext _context;
         public AppointmentController(IUnitOfWork unitOfWork, HospitalDbContext context, ILogger<AppointmentController> logger)
         {
             _unitOfWork = unitOfWork;
 
             _logger = logger;
-            _context = context;
         }
 
 
         public IActionResult Index()
         {
-            return View();
+            var appoint = _unitOfWork.specializationRepository.GetSpecializations();
+            SpecializationViewModel specializationViewModel = new SpecializationViewModel
+            {
+                Specializations = appoint
+            };
+            return View(specializationViewModel);
         }
+
+
 
         public IActionResult  Create(int id)
         {
@@ -78,14 +89,10 @@ namespace Hospital.Controllers
             {
                 DateTime = model.GetStartDateTime(),
                 Details = model.Detail,
-                contactStatus = ContactStatus.Submitted,
-                PatientId = model.Patient,
+                Status = Status.Submitted,
+               
                 DoctorId = model.Doctor,
             };
-/*            if(_unitOfWork.appoinmentRepository.ValidateAppointment(appointment.DateTime, model.Doctor))
-            {
-                return View("Invalid Appointment");
-            }*/
             _unitOfWork.appoinmentRepository.Add(appointment);
             _unitOfWork.Complete();
 
@@ -124,7 +131,7 @@ namespace Hospital.Controllers
             var d = appointment.Id;
             _logger.LogInformation("{d} Appointment id for Approval",d);
 
-            appointment.contactStatus = ContactStatus.Approved;
+            appointment.Status = Status.Approved;
             _unitOfWork.Complete();
             return RedirectToAction("Appointments","Appointment");
             
@@ -140,7 +147,7 @@ namespace Hospital.Controllers
             var d = appointment.Id;
             _logger.LogInformation("{d} Appointment id for Rejection",d);
             
-        appointment.contactStatus = ContactStatus.Rejected;
+        appointment.Status = Status.Rejected;
         _unitOfWork.Complete();
         return RedirectToAction("Appointments", "Appointment");
 
@@ -149,28 +156,6 @@ namespace Hospital.Controllers
 
         public ViewResult List(string appointment)
         {
-            /*            var result = _unitOfWork.appoinmentRepository.GetAppoinments();
-
-                         IEnumerable<Appointment> appointments;
-                        if (ModelState.IsValid) { 
-                            if (appointment == "approved")
-                            {
-                                appointments = result.Where(c => c.contactStatus == ContactStatus.Approved);
-
-                            }
-                            if( appointment == "rejected")
-                            {
-                                appointments = result.Where(c => c.contactStatus == ContactStatus.Rejected);
-                            }
-
-
-                            var viewmodel = new AppointmentViewModel
-                            {
-                                Appointmentss = appointments,
-                            };
-
-
-                        }*/
 
             var app = _unitOfWork.appoinmentRepository.FilterAppointments(appointment);
 
@@ -197,11 +182,226 @@ namespace Hospital.Controllers
 
             var viewmodel = new AppointmentViewModel
             {
-                Appointment = result
+                Appointment = result,
+                StringName = model.StringName,
+                Date = model.Date,
             };
-            
             return View(viewmodel);
         }
-}
+
+        [HttpPost]
+        public IActionResult Excel(AppointmentViewModel model)
+        {
+            var appoint = _unitOfWork.appoinmentRepository.CustomFilterAppointment(model.StringName, model.Date);
+            using (var workbook = new XLWorkbook())
+            {
+               
+                var worksheet = workbook.Worksheets.Add("Appointments");
+                var currentRow = 1;
+                worksheet.Cell(currentRow, 1).Value = "Token";
+                worksheet.Cell(currentRow, 2).Value = "Name";
+                worksheet.Cell(currentRow, 3).Value = "Phone";
+                worksheet.Cell(currentRow, 4).Value = "Date";
+                worksheet.Cell(currentRow, 5).Value = "Time";
+                
+                foreach(var item in appoint)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = item.Patient.Token;
+                    worksheet.Cell(currentRow, 2).Value = item.Patient.Name;
+                    worksheet.Cell(currentRow, 3).Value = item.Patient.Phone;
+                    worksheet.Cell(currentRow, 4).Value = item.DateTime.Date.ToString("dd/MM/yyyy");
+                    worksheet.Cell(currentRow, 5).Value = item.DateTime.ToLocalTime().TimeOfDay;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Appointment List.xlsx");
+                }
+            }
+        }
+
+        public IActionResult SelectSpecialization(string name)
+        {
+          
+            var doctors = _unitOfWork.doctorRepository.GetDoctors(name);
+
+            var model = new DoctorViewModel();
+
+            model.Doctors = doctors.ToList();
+
+            return View(model);
+            
+        }
+
+        
+        public  IActionResult SelectDateForAppontment(int id)
+        {
+            var doc = _unitOfWork.doctorRepository.GetIndividualDoctor(id);
+            var model = new TimeSlotViewModel();
+            model.DoctorId = doc.Id;
+            
+            return View(model);
+        }
+
+
+        public IActionResult SelectTimeSlot(TimeSlotViewModel modelVm)
+        {
+            var approvedAppointments = _unitOfWork.appoinmentRepository.ApprovedAppointment(modelVm.Date.Value.Date,modelVm.DoctorId);
+            var specialistTimeSlots = _unitOfWork.appoinmentRepository.GetTimeSlots(modelVm.DoctorId);
+
+            var availableTimeSlots = new List<TimeSlot>();
+            var model = new TimeSlotViewModel();
+            model.Date = modelVm.Date;
+            if (!(approvedAppointments == null))
+            {
+
+                foreach (var timeSlot in specialistTimeSlots)
+                {
+                    foreach (var appointment in approvedAppointments)
+                    {
+                        if (!(appointment.StartTime == timeSlot.StartTime && appointment.EndTime == timeSlot.EndTime))
+                        {
+                            availableTimeSlots.Add(timeSlot);
+                            break;
+                        }
+
+                    }
+                }
+            }
+
+            if ( approvedAppointments.Count().Equals(0))
+            {
+
+
+                foreach (var timeslot in specialistTimeSlots)
+                {
+                    availableTimeSlots.Add(timeslot);
+                }
+
+            }
+        
+            
+
+            model.TimeSlots = availableTimeSlots;
+
+            var doctor = _unitOfWork.doctorRepository.GetDoctorById(modelVm.DoctorId);
+
+            model.Doctor = doctor;
+
+            model.Name = doctor.Name;
+
+            return View(model);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult GetAppointment (int doctorid, int timeslotid, DateTime Date)
+        
+        {
+            var timeId = _unitOfWork.appoinmentRepository.GetTimeSlots(timeslotid).FirstOrDefault();
+
+
+            var userId  = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _unitOfWork.Patient.GetPatientById(userId);
+            if(user != null)
+            {
+                var modelVM = new TimeSlotViewModel
+                {
+                    patient = user,
+                    StartTime = timeId.StartTime,
+                    EndTime = timeId.EndTime,
+                    PatientId = userId,
+                    DoctorId = doctorid,
+                    Date = Date,
+                };
+
+                return View(modelVM);
+            }
+
+
+            var model = new TimeSlotViewModel
+            {
+                StartTime = timeId.StartTime,
+                EndTime = timeId.EndTime,
+                PatientId = userId,
+                DoctorId = doctorid,
+                Date = Date,
+               
+                
+            };
+            var gen = new List<SelectListItem>();
+
+            gen.Add(new SelectListItem()
+            {
+                Text = "Select",
+                Value = ""
+            }
+                );
+
+            foreach (Gender item in Enum.GetValues(typeof(Gender)))
+            {
+                gen.Add(new SelectListItem { Text = Enum.GetName(typeof(Gender), item), Value = item.ToString() });
+            }
+            ViewBag.gender = gen;
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult ConfirmAppointment(TimeSlotViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = _unitOfWork.Patient.GetPatientById(model.PatientId);
+                if (user == null)
+                {
+
+              
+
+                    Patient patient = new Patient
+                    {
+                        Name = model.patient.Name,
+                        Phone = model.patient.Phone,
+                        BirthDate = model.patient.BirthDate,
+                        PatientId = model.PatientId,
+                        gender = model.patient.gender,
+                        Address = model.patient.Address,
+                        Height = model.patient.Height,
+                        Weight = model.patient.Weight,
+                        Token = model.patient.Token
+
+
+                    };
+
+                    _unitOfWork.Patient.Add(patient);
+                    _unitOfWork.Complete();
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Appointment appointment = new Appointment
+                {
+                    StartTime = model.StartTime,
+                    EndTime = model.EndTime,
+                    Details = model.Details,
+                    Status = Status.Submitted,
+                    DoctorId = model.DoctorId,
+                    PatientId = userId,
+                    DateTime = model.Date.GetValueOrDefault()
+
+                };
+                _unitOfWork.appoinmentRepository.Add(appointment);
+                _unitOfWork.Complete();
+               
+            }
+            return RedirectToAction("Index", "Appointment");
+        }
+
+
+    }
 }
 

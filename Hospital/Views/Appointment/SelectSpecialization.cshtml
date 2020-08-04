@@ -1,4 +1,4 @@
-﻿@model AppointmentViewModel
+﻿@model DoctorViewModel
 <div class="content-wrapper">
     <section class="content" style="margin-top:-77%">
 
@@ -29,51 +29,22 @@
                             <div class="box-body table-responsive no-padding">
                                 <table id="appointments" class="table table-hover">
                                     <tr>
-                                        <th>Token</th>
 
-                                        <th>Patiennt Name</th>
+                                        <th></th>
 
-                                        <th>Doctor Name</th>
-
-                                        <th>Date & Time</th>
-
-                                        <th>Status</th>
 
                                     </tr>
-                                    @foreach (var item in @Model.Appointment)
+                                    @foreach (var item in @Model.Doctors)
                                     {
-                                        <tr>
-                                            <th scope="row">@item.Patient.Token</th>
+                                <tr>
+                                    <th scope="row">
+                                        <a asp-controller="Appointment" asp-action="SelectDateForAppontment" asp-route-Id="@item.Id" name="Approve" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>@item.Name</a>
+                                    </th>
+                                    
 
-                                            <td>
-                                                <a asp-action="Details" asp-controller="Appointment" asp-route-Id="@item.Id">@item.Patient.Name</a>
 
-                                            </td>
 
-                                            <td>@item.Doctor.Name</td>
-
-                                            <td>@item.DateTime</td>
-
-                                            <td>
-                                                @{
-                                                    if (item.Status == Status.Submitted)
-                                                    {
-
-                                                        <span class="label label-warning">Pending</span>
-                                                    }
-                                                    else if (item.Status == Status.Approved)
-                                                    {
-                                                        <span class="label label-success">Approved</span>
-                                                    }
-                                                    else if (item.Status == Status.Rejected)
-                                                    {
-                                                        <span class="label label-danger">Rejected</span>
-                                                    }
-
-                                                }
-                                            </td>
-
-                                        </tr>
+                                </tr>
                                     }
                                 </table>
                             </div><!-- /.box-body -->

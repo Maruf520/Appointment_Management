@@ -1,0 +1,82 @@
+﻿@model TimeSlotViewModel
+<div class="content-wrapper">
+    <section class="content" style="margin-top:-77%">
+
+        <!-- Default box -->
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">All Appointments</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box">
+                            <div class="box-header">
+
+                                <div class="box-tools">
+                                    <div class="input-group" style="width: 150px;">
+                                        <input type="text" name="table_search" class="form-control input-sm pull-right" placeholder="Search" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-header -->
+                            <div class="">
+                               
+                                    <table id="appointments" class="table table-hover">
+                                        <tr>
+
+                                            <th>@Model.Name</th>
+
+                                        </tr>
+                                        <tr>
+                                            @foreach(var item in Model.Days) {
+                                            <th>
+                                            
+                                                @item
+
+                                            </th>
+                                            }
+                                        </tr>
+
+                                        @foreach (var item in @Model.TimeSlots)
+                                        {
+
+                                            <tr>
+
+                                                <th scope="row">
+                                                    
+                                                <td><a class="btn btn-primary" @Html.ActionLink(""+@item.StartTime+ "-" +@item.EndTime,"GetAppointment", new { timeslotid = item.TimeSlotId, doctorid = Model.Doctor.Id })></a></td>
+
+                                                </th>
+
+                                            </tr>
+
+                                        }
+                                      
+                                    </table>
+                         
+                                    </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /.box -->
+
+    </section>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function() {
+            $('#appointments').DataTable();
+        });
+    </script>
+}

@@ -1,0 +1,34 @@
+﻿@model SpecializationViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <div class="content-wrapper">
+        <section class="content" style="margin-top:-77%">
+            <div class="box ">
+                <div class="box-header with-border">
+                    <h3 class="box-title"> Doctor Details </h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <div class="card" style="width: 50rem; margin-left:30%;">
+                    <div class="card-body">
+                        <h5 class="card-title">Name</h5>
+
+                    </div>
+                    @foreach (var item in Model.Specializations) { 
+                    <ul class="list-group list-group-flush">
+                        <a asp-controller="Appointment" asp-action="SelectSpecialization" asp-route-name="@item.Name" class="btn btn-default"><i class="fa fa-marker fa-lg"></i>@item.Name</a>
+
+                    </ul>
+                    }
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+

@@ -16,20 +16,17 @@ namespace Hospital.Models
         }
 
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<Gender> Genders { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Specialization> Specializations {get;set;}
+        public DbSet<Specialization> Specializations { get; set; }
         public DbSet<Appointment> Appoinments { get; set; }
         public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
+        public DbSet<TimeSlot> TimeSlot { get; set; }
+    
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<Patient>()
-                .HasOne(p => p.Gender)
-                .WithMany(p => p.patients)
-                .HasForeignKey(p => p.GenderId); ;
 
 
             modelBuilder.Entity<DoctorSpecialization>()
@@ -46,6 +43,8 @@ namespace Hospital.Models
                 .HasOne(p => p.Specialization)
                 .WithMany(p => p.doctorSpecializations)
                 .HasForeignKey(p => p.SpecializationId); ;
+
+
 
 
 

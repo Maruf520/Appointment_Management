@@ -28,7 +28,7 @@
                 </div>
 
                 @{
-                    @if (Model.Appointment.contactStatus == ContactStatus.Approved || Model.Appointment.contactStatus == ContactStatus.Rejected)
+                    @if (Model.Appointment.Status == Status.Approved || Model.Appointment.Status == Status.Rejected)
                     {
                         <div>
 
@@ -38,7 +38,7 @@
                     {
                         <div>
                             <a asp-controller="Appointment" asp-action="Approval" asp-route-Id="@Model.Appointment.Id" name="Approve" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Approve</a>
-                            <a asp-controller="Appointment" asp-action="Rejection" asp-route-Id="@Model.Appointment.PatientId" class="btn btn-danger"><i class="fa fa-marker fa-lg"></i>Reject</a>
+                            <a asp-controller="Appointment" asp-action="Rejection"  class="btn btn-danger"><i class="fa fa-marker fa-lg"></i>Reject</a>
                         </div>
                     }
 

@@ -56,16 +56,16 @@
 
                                     <td>
                                         @{
-                                            if (item.contactStatus == ContactStatus.Submitted)
+                                            if (item.Status == Status.Submitted)
                                             {
 
                                                 <span class="label label-warning">Pending</span>
                                             }
-                                            else if (item.contactStatus == ContactStatus.Approved)
+                                            else if (item.Status == Status.Approved)
                                             {
                                                 <span class="label label-success">Approved</span>
                                             }
-                                            else if(item.contactStatus == ContactStatus.Rejected)
+                                            else if(item.Status == Status.Rejected)
                                             {
                                                 <span class="label label-danger">Rejected</span>
                                             }

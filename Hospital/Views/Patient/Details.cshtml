@@ -26,8 +26,8 @@
                 </ul>
 
             </div>
-            <a asp-controller="Patient" asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Edit</a>
-            <a asp-controller="Appointment" asp-action="Create" asp-route-id="@Model.Patient.Id" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Appointment</a>
+            <a asp-controller="Patient" asp-action="Edit" asp-route-id="@Model.Patient.PatientId" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Edit</a>
+            <a asp-controller="Appointment" asp-action="Create" asp-route-id="@Model.Patient.PatientId" class="btn btn-primary"><i class="fa fa-marker fa-lg"></i>Appointment</a>
         </div>
 
     </section>

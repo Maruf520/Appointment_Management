@@ -64,7 +64,7 @@ namespace Hospital.Controllers
                 Address = user.Address,
 
                 Phone = user.Phone,
-                SpecializationId = user.SpecializationId,
+                
                 Name = user.Name,
             };
             _unitOfWork.Complete();
@@ -167,7 +167,7 @@ namespace Hospital.Controllers
             user.Name = model.doctor.Name;
             user.Phone = model.doctor.Phone;
             user.Address = model.doctor.Address;
-            user.SpecializationId = model.doctor.SpecializationId;
+     
 
             _unitOfWork.Complete();
 
