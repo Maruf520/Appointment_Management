@@ -1,22 +1,29 @@
-﻿@model PatientRegisterViewModel
+﻿@model TimeSlotViewModel
 <div class="content-wrapper">
     <section class="content" style="margin-top:-81%">
 
         <!-- SELECT2 EXAMPLE -->
-        <form asp-action="Edit" asp-controller="Patient">
+        <form asp-action="ConfirmAppointment" asp-controller="Appointment" method="post">
             <div class="box ">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Update Patient's Info </h3>
+                    <h3 class="box-title">Register Patient </h3>
                     <div class="box-tools pull-right">
                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
                     </div>
                 </div><!-- /.box-header -->
-
+            <input type="hidden" asp-for="@Model.DoctorId" />
+            <input type="hidden" asp-for="@Model.PatientId" />
+            <input  type="hidden" asp-for="@Model.StartTime" />
+            <input type="hidden" asp-for="@Model.EndTime" />
+            <input type ="hidden" asp-for="@Model.Date" />
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-6">
-                        <input asp-for="@Model.patient.PatientId" type="hidden" />
+                            <div class="form-group">
+                                <label>Appointment Time</label>
+                                <h6> @Model.StartTime - @Model.EndTime </h6>                          
+                                </div><!-- /.form-group -->
                             <div class="form-group">
                                 <label>Name</label>
                                 <input type="text" asp-for="@Model.patient.Name" class="form-control select2" />
@@ -33,13 +40,21 @@
                                 <label>Height</label>
                                 <input type="text" asp-for="@Model.patient.Height" class="form-control select2" />
                             </div>
+                            <div class="form-group">
+                                <label>Token</label>
+                                <input type="text" asp-for="@Model.patient.Token" class="form-control select2" />
+                            </div>
 
                         </div><!-- /.col -->
 
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label>Appointment Date</label>
+                                <h6> @Model.Date.GetValueOrDefault() </h6>
+                            </div><!-- /.form-group -->
+                            <div class="form-group">
                                 <label>Gender</label>
-                                <select asp-for="@Model.patient.GenderId" asp-items="@Model.GenderList" class="form-control select2">
+                                <select asp-for="@Model.patient.gender" asp-items="@ViewBag.gender" class="form-control select2">
                                     <option>--Please select one--</option>
                                 </select>
                             </div>
@@ -51,12 +66,16 @@
                                 <label>Weight</label>
                                 <input type="text" asp-for="@Model.patient.Weight" class="form-control select2" />
                             </div>
+                            <div class="form-group">
+                                <label>Details</label>
+                                <input type="text" asp-for="@Model.Details" class="form-control select2" />
+                            </div>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.box-body -->
                 <div class="item form-group">
                     <div class="col-md-6 col-sm-6 offset-md-3">
-                        <button type="submit" class="btn btn-success">Update</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </div>
             </div><!-- /.box -->

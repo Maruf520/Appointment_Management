@@ -7,6 +7,6 @@ namespace Hospital.Models
 {
     public interface IGenderRepository
     {
-        IEnumerable<Gender> GetGenders();
+       
     }
 }

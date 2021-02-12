@@ -1,4 +1,4 @@
-﻿@model AppointmentViewModel
+﻿@model TimeSlotViewModel
 <div class="content-wrapper">
     <section class="content" style="margin-top:-77%">
 
@@ -26,33 +26,33 @@
                                     </div>
                                 </div>
                             </div><!-- /.box-header -->
-                            <div class="box-body table-responsive no-padding">
+                            <div class="">
+
                                 <table id="appointments" class="table table-hover">
                                     <tr>
-                                        <th>Token</th>
-                                        <th>Patiennt Name</th>
-                                        <th>Date </th>
-                                        <th>Time</th>
+
+                                        <th>@Model.Name</th>
+
                                     </tr>
-                                    @foreach (var item in @Model.Appointment)
+
+
+                                    @foreach (var item in @Model.TimeSlots)
                                     {
-                                <tr>
-                                    <th scope="row">@item.Patient.Token</th>
-                                    <td>
-                                        <a asp-action="Details" asp-controller="Appointment" asp-route-Id="@item.Id">@item.Patient.Name</a>
-                                    </td>
-                                    <td>@item.DateTime.Date.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.DateTime.ToShortTimeString()</td>
-                                </tr>
+
+                                        <tr>
+
+                                            <th scope="row">
+
+                                            <td><a class="btn btn-primary" @Html.ActionLink("" + @item.StartTime + "-" + @item.EndTime, "GetAppointment", new { timeslotid = item.TimeSlotId, doctorid = Model.Doctor.Id ,Date = Model.Date})></a></td>
+
+                                            </th>
+
+                                        </tr>
+
                                     }
+
                                 </table>
-                                <form asp-action="Excel" asp-controller="Appointment" method="post">
-                                    <input asp-for="@Model.Date" type="hidden"/>
-                                    <input asp-for="@Model.StringName" type="hidden"/>
-                                   
-                                     <button class="btn btn-sm btn-default">Download</button>
-                                    
-                                </form>
+
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
                     </div>
@@ -64,3 +64,11 @@
 
     </section>
 </div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#appointments').DataTable();
+        });
+    </script>
+}

@@ -58,19 +58,19 @@ namespace Hospital.Repositories.Appointments
             {
                 if(appointment == "approved")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Approved);
+                    result = result.Where(c => c.Status == Status.Approved);
                 }
                 else if(appointment == "rejected")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Rejected);
+                    result = result.Where(c => c.Status == Status.Rejected);
                 }
                 else if (appointment == "pending")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Submitted);
+                    result = result.Where(c => c.Status == Status.Submitted);
                 }
                 else if (appointment == "today")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Approved && c.DateTime.Year == DateTime.Now.Year && c.DateTime.Month == DateTime.Now.Month && c.DateTime.Day == DateTime.Now.Day);
+                    result = result.Where(c => c.Status == Status.Approved && c.DateTime.Year == DateTime.Now.Year && c.DateTime.Month == DateTime.Now.Month && c.DateTime.Day == DateTime.Now.Day);
                 }
             }
             return result;
@@ -83,20 +83,32 @@ namespace Hospital.Repositories.Appointments
             {
                 if(name == "pending")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Submitted && c.DateTime.Date == date);
+                    result = result.Where(c => c.Status == Status.Submitted && c.DateTime.Date == date);
                 }
                 else if (name == "approved")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Approved && c.DateTime.Date == date);
+                    result = result.Where(c => c.Status == Status.Approved && c.DateTime.Date == date);
                 }
                 else if (name == "rejected")
                 {
-                    result = result.Where(c => c.contactStatus == ContactStatus.Rejected && c.DateTime.Date == date);
+                    result = result.Where(c => c.Status == Status.Rejected && c.DateTime.Date == date);
                 }
             }
 
             return result;
         }
+
+        public IEnumerable<TimeSlot> GetTimeSlots(int id)
+        {
+
+            return _hospitalDbContext.TimeSlot.Include(c => c.Doctor).Where(c => c.Doctor.Id == id);
+        }
+        public IEnumerable<Appointment> ApprovedAppointment(DateTime datetime,int id)
+        {
+            return _hospitalDbContext.Appoinments.Where(c => c.DoctorId == id && c.DateTime == datetime && c.Status == Status.Approved);
+        }
+
+
 
     }
 }

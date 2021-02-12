@@ -12,9 +12,6 @@ namespace Hospital.Models
         {
             _hospitalDbContext = hospitalDbContext;
         }
-        public  IEnumerable<Gender> GetGenders()
-        {
-            return  _hospitalDbContext.Genders;
-        }
+
     }
 }

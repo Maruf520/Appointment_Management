@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,11 +8,12 @@ namespace Hospital.Models
 {
     public class Patient
     {
-        public int Id { get; set; }
+        [Key]
+        public string PatientId { get; set; }
         public string Token { get; set; }
         public string Name { get; set; }
         public int GenderId { get; set; }
-        public Gender Gender { get; set; }
+        public Gender gender { get; set; }
         
         public DateTime BirthDate { get; set; }
         public String Phone { get; set; }
@@ -19,7 +21,7 @@ namespace Hospital.Models
         public DateTime DateTime { get; set; }
         public string Height { get; set; }
         public string Weight { get; set; }
-
+        public ICollection<Appointment> Appointments { get; set; }
 
         public int Age
         {
@@ -31,6 +33,12 @@ namespace Hospital.Models
                 return age;
             }
 
+        }
+
+        public enum Gender
+        {
+            Male,
+            Female
         }
 
     }

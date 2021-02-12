@@ -9,17 +9,19 @@ namespace Hospital.Models
     {
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
-        /*public string Time { get; set; }*/
         public string Details { get; set; }
       
-        public int PatientId { get; set; }
+        public string PatientId { get; set; }
         public Patient Patient { get; set; }
         public int DoctorId { get; set; }
         public Doctor Doctor { get; set; }
-        public ContactStatus contactStatus { get; set; }
+
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public Status Status { get; set; }
     }
 
-    public enum ContactStatus
+    public enum Status
     {
         Submitted,
         Approved,

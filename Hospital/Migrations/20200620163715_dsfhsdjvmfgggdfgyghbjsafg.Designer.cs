@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20200523094012_abda")]
-    partial class abda
+    [Migration("20200620163715_dsfhsdjvmfgggdfgyghbjsafg")]
+    partial class dsfhsdjvmfgggdfgyghbjsafg
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,9 @@ namespace Hospital.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -37,10 +40,16 @@ namespace Hospital.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("EndTime")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("contactStatus")
+                    b.Property<string>("StartTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -69,10 +78,8 @@ namespace Hospital.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SpecializationId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -92,21 +99,6 @@ namespace Hospital.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("DoctorSpecializations");
-                });
-
-            modelBuilder.Entity("Hospital.Models.Gender", b =>
-                {
-                    b.Property<int>("GenderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("GenderName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GenderId");
-
-                    b.ToTable("Genders");
                 });
 
             modelBuilder.Entity("Hospital.Models.Patient", b =>
@@ -143,9 +135,10 @@ namespace Hospital.Migrations
                     b.Property<string>("Weight")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("gender")
+                        .HasColumnType("int");
 
-                    b.HasIndex("GenderId");
+                    b.HasKey("Id");
 
                     b.ToTable("Patients");
                 });
@@ -163,6 +156,29 @@ namespace Hospital.Migrations
                     b.HasKey("SpecializationId");
 
                     b.ToTable("Specializations");
+                });
+
+            modelBuilder.Entity("Hospital.Models.TimeSlot", b =>
+                {
+                    b.Property<int>("TimeSlotId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("TimeSlotId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("TimeSlot");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -391,13 +407,11 @@ namespace Hospital.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Hospital.Models.Patient", b =>
+            modelBuilder.Entity("Hospital.Models.TimeSlot", b =>
                 {
-                    b.HasOne("Hospital.Models.Gender", "Gender")
-                        .WithMany("patients")
-                        .HasForeignKey("GenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Hospital.Models.Doctor", "Doctor")
+                        .WithMany("Timeslots")
+                        .HasForeignKey("DoctorId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

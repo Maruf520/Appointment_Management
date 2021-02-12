@@ -17,5 +17,7 @@ namespace Hospital.Repositories.Appointments
         void Update(Appointment appointment);
         void Add(Appointment appointment);
         bool ValidateAppointment(DateTime datetime, int id );
+        IEnumerable<Appointment> ApprovedAppointment(DateTime datetime, int id);
+        IEnumerable<TimeSlot> GetTimeSlots(int id);
     }
 }

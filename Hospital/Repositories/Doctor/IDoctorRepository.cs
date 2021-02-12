@@ -8,8 +8,9 @@ namespace Hospital.Repositories
 {
     public interface IDoctorRepository
     {
-        IEnumerable<Doctor> GetDoctors();
+        IEnumerable<Doctor> GetDoctors(string name);
         IEnumerable<Doctor> GetDoctorList();
+        Doctor GetIndividualDoctor(int id);
 
         IEnumerable<Doctor> GetAvailableDoctors();
 

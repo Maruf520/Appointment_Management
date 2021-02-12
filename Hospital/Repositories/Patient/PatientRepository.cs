@@ -20,14 +20,14 @@ namespace Hospital.Models
              _hospitalDbContext.Patients.Add(patient);
         }
 
-        public Patient GetPatientById(int id)
+        public Patient GetPatientById(string id)
         {
-            return _hospitalDbContext.Patients.Include(s=> s.Gender).SingleOrDefault(c => c.Id == id);
+            return _hospitalDbContext.Patients.SingleOrDefault(c => c.PatientId == id);
         }
 
         public IEnumerable<Patient> GetPatients()
         {
-            return _hospitalDbContext.Patients.Include(c => c.Gender);
+            return _hospitalDbContext.Patients;
         }
         public IEnumerable<Patient> GetPatientList ()
         {

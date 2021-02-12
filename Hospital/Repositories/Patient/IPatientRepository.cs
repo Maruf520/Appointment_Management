@@ -10,7 +10,7 @@ namespace Hospital.Models
         IEnumerable<Patient> GetPatients();
         /*       IEnumerable<Patient> GetRecentPatients();*/
         IEnumerable<Patient> GetPatientList();
-        Patient GetPatientById(int id);
+        Patient GetPatientById(string id);
         void Add(Patient  patient);
         void Remove(Patient patient);
         void Update(Patient patient);

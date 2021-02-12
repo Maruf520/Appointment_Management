@@ -38,7 +38,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Gender</label>
-                                <select asp-for="@Model.patient.GenderId" asp-items="@Model.GenderList" class="form-control select2">
+                                <select asp-for="@Model.patient.gender"  asp-items="@ViewBag.gender" class="form-control select2">
                                     <option>--Please select one--</option>
                                 </select>
                             </div>

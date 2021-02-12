@@ -178,97 +178,11 @@ namespace Hospital.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DoctorRegistration()
-        {
-            var specializations = _unitOfWork.specializationRepository.GetSpecializations();
-            var model = new DoctorFormViewModel();
-            foreach (var Specialization in specializations)
-            {
-                model.SpecializationList.Add(new SelectListItem()
-                {
-                    Value = Specialization.SpecializationId.ToString(),
-
-                    Text = Specialization.Name
-
-                }
-
-                    );
-            }
 
 
-            return View(model);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> DoctorRegistration(DoctorFormViewModel model)
-        {
 
-            var user = new ApplicationUser()
-            {
-                UserName = model.registerViewModel.Email,
-                Email = model.registerViewModel.Email,
-                IsActive = true
 
-            };
-            var result = await userManager.CreateAsync(user, model.registerViewModel.Password);
-
-            if (result.Succeeded)
-            {
-                var doctor = new Doctor()
-                {
-                    Address = model.doctor.Address,
-                    Phone = model.doctor.Phone,
-                    SpecializationId = model.doctor.SpecializationId,
-                    Name = model.doctor.Name,
-                    IsAvailable = true,
-
-                };
-                _unitOfWork.doctorRepository.Add(doctor);
-                _unitOfWork.Complete();
-                return RedirectToAction("Index", "Home");
-
-                
-            }
-            return View();
-
-        }
-
-        [HttpGet]
-        public async Task<IActionResult>Edit(int id)
-        {
-            var specializations = _unitOfWork.specializationRepository.GetSpecializations();
-            var doctorObj = _unitOfWork.doctorRepository.GetDoctorById(id);
-            var model = new DoctorFormViewModel
-            {
-                doctor = doctorObj
-            };
-         
-            foreach (var specialization in specializations)
-            {
-                model.SpecializationList.Add(new SelectListItem()
-                {
-                    Value = specialization.SpecializationId.ToString(),
-
-                    Text = specialization.Name
-                }); ;
-            }
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(DoctorFormViewModel model)
-        {
-            var user = _unitOfWork.doctorRepository.GetDoctorById(model.doctor.Id);
-            user.Name = model.doctor.Name;
-            user.Phone = model.doctor.Phone;
-            user.Address = model.doctor.Address;
-            user.SpecializationId = model.doctor.SpecializationId;
-
-            _unitOfWork.Complete();
-
-            return RedirectToAction("Index","Doctor");
-        }
 
 
     }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hospital.Migrations
 {
-    public partial class abda : Migration
+    public partial class dsfhsdjvmfgggdf : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,10 +53,9 @@ namespace Hospital.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: false),
                     IsAvailable = table.Column<bool>(nullable: false),
-                    Address = table.Column<string>(nullable: true),
-                    SpecializationId = table.Column<int>(nullable: false)
+                    Address = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,16 +63,25 @@ namespace Hospital.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genders",
+                name: "Patients",
                 columns: table => new
                 {
-                    GenderId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GenderName = table.Column<string>(nullable: true)
+                    Token = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    GenderId = table.Column<int>(nullable: false),
+                    gender = table.Column<int>(nullable: false),
+                    BirthDate = table.Column<DateTime>(nullable: false),
+                    Phone = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    Height = table.Column<string>(nullable: true),
+                    Weight = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genders", x => x.GenderId);
+                    table.PrimaryKey("PK_Patients", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,6 +95,21 @@ namespace Hospital.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Specializations", x => x.SpecializationId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeSlot",
+                columns: table => new
+                {
+                    TimeSlotId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StartTime = table.Column<TimeSpan>(nullable: false),
+                    EndTime = table.Column<TimeSpan>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeSlot", x => x.TimeSlotId);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,29 +219,34 @@ namespace Hospital.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patients",
+                name: "Appoinments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Token = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    GenderId = table.Column<int>(nullable: false),
-                    BirthDate = table.Column<DateTime>(nullable: false),
-                    Phone = table.Column<string>(nullable: true),
-                    Address = table.Column<string>(nullable: true),
                     DateTime = table.Column<DateTime>(nullable: false),
-                    Height = table.Column<string>(nullable: true),
-                    Weight = table.Column<string>(nullable: true)
+                    Details = table.Column<string>(nullable: true),
+                    PatientId = table.Column<int>(nullable: false),
+                    DoctorId = table.Column<int>(nullable: false),
+                    StartTime = table.Column<string>(nullable: true),
+                    EndTime = table.Column<string>(nullable: true),
+                    IsBooked = table.Column<bool>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Patients", x => x.Id);
+                    table.PrimaryKey("PK_Appoinments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Patients_Genders_GenderId",
-                        column: x => x.GenderId,
-                        principalTable: "Genders",
-                        principalColumn: "GenderId",
+                        name: "FK_Appoinments_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appoinments_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -247,31 +275,27 @@ namespace Hospital.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appoinments",
+                name: "DoctorTimeslots",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DateTime = table.Column<DateTime>(nullable: false),
-                    Details = table.Column<string>(nullable: true),
-                    PatientId = table.Column<int>(nullable: false),
                     DoctorId = table.Column<int>(nullable: false),
-                    contactStatus = table.Column<int>(nullable: false)
+                    TimeSoltId = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Appoinments", x => x.Id);
+                    table.PrimaryKey("PK_DoctorTimeslots", x => new { x.DoctorId, x.TimeSoltId, x.Date });
                     table.ForeignKey(
-                        name: "FK_Appoinments_Doctors_DoctorId",
+                        name: "FK_DoctorTimeslots_Doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "Doctors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Appoinments_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "Id",
+                        name: "FK_DoctorTimeslots_TimeSlot_TimeSoltId",
+                        column: x => x.TimeSoltId,
+                        principalTable: "TimeSlot",
+                        principalColumn: "TimeSlotId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -330,9 +354,9 @@ namespace Hospital.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patients_GenderId",
-                table: "Patients",
-                column: "GenderId");
+                name: "IX_DoctorTimeslots_TimeSoltId",
+                table: "DoctorTimeslots",
+                column: "TimeSoltId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -359,6 +383,9 @@ namespace Hospital.Migrations
                 name: "DoctorSpecializations");
 
             migrationBuilder.DropTable(
+                name: "DoctorTimeslots");
+
+            migrationBuilder.DropTable(
                 name: "Patients");
 
             migrationBuilder.DropTable(
@@ -368,13 +395,13 @@ namespace Hospital.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Doctors");
-
-            migrationBuilder.DropTable(
                 name: "Specializations");
 
             migrationBuilder.DropTable(
-                name: "Genders");
+                name: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "TimeSlot");
         }
     }
 }

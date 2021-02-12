@@ -16,9 +16,9 @@ namespace Hospital.Repositories
             _hospitalDbContext = hospitalDbContext;
         }
 
-        public IEnumerable<Doctor> GetDoctors()
+        public IEnumerable<Doctor> GetDoctors(string name)
         {
-            return _hospitalDbContext.Doctors.Include(s => s.doctorSpecializations);
+            return _hospitalDbContext.Doctors.Include(c => c.doctorSpecializations).Where(c => c.doctorSpecializations.Any(s => s.Specialization.Name == name));
         }
         public IEnumerable<Doctor> GetDoctorList()
         {
@@ -43,6 +43,10 @@ namespace Hospital.Repositories
         public void Remove(Doctor doctor)
         {
            _hospitalDbContext.Doctors.Remove(doctor);
+        }
+        public Doctor GetIndividualDoctor(int id)
+        {
+            return _hospitalDbContext.Doctors.Include(s => s.doctorSpecializations).SingleOrDefault(d =>d.Id == id);
         }
     }
 }
