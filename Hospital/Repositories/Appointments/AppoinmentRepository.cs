@@ -17,7 +17,7 @@ namespace Hospital.Repositories.Appointments
             _hospitalDbContext = hospitalDbContext;
         }
 
-        public IEnumerable<Appointment> GetAppoinments()
+        public List<Appointment> GetAppoinments()
         {
             return _hospitalDbContext.Appoinments.Include(c => c.Patient).Include( p => p.Doctor).ToList();
         }

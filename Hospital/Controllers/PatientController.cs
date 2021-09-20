@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Presentation;
+using FizzWare.NBuilder;
 using Hospital.Models;
 using Hospital.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,8 @@ namespace Hospital.Controllers
 {
     public class PatientController : Controller
     {
-        
+        private readonly Random _random = new Random();
+
         private readonly IUnitOfWork _unitOfWork;
         public PatientController( IUnitOfWork unitOfWork)
         {
@@ -89,9 +91,10 @@ namespace Hospital.Controllers
                 int year = todaysDate.Year;
 
 
-
                 var patient = new Patient
                 {
+
+                    Id = _random.Next().ToString(),
                     Name = model.patient.Name,
                     Address = model.patient.Address,
                     Phone = model.patient.Phone,
@@ -152,7 +155,7 @@ namespace Hospital.Controllers
             {
 
 
-                var patientObj = _unitOfWork.Patient.GetPatientById(model.patient.PatientId);
+                var patientObj = _unitOfWork.Patient.GetPatientById(model.patient.Id);
                 patientObj.Name = model.patient.Name;
                 patientObj.Address = model.patient.Address;
                 patientObj.Phone = model.patient.Phone;
@@ -165,7 +168,7 @@ namespace Hospital.Controllers
                 _unitOfWork.Complete();
 
             }
-            return RedirectToAction("Details", "Patient", new { @id = model.patient.PatientId });
+            return RedirectToAction("Details", "Patient", new { @id = model.patient.Id });
              return RedirectToAction(nameof(Index));
 
         }

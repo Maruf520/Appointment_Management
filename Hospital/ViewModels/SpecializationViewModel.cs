@@ -9,5 +9,6 @@ namespace Hospital.ViewModels
     public class SpecializationViewModel
     {
         public IEnumerable<Specialization> Specializations { get; set; }
+        public string PatientId { get; set; }
     }
 }

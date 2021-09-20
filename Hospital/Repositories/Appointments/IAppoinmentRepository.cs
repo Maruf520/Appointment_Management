@@ -8,7 +8,7 @@ namespace Hospital.Repositories.Appointments
 {
     public interface IAppoinmentRepository
     {
-        IEnumerable<Appointment> GetAppoinments();
+        List<Appointment> GetAppoinments();
         IEnumerable<Appointment> GetAppointmentWithPatients(int id);
         IEnumerable<Appointment> AppointmentByDoctor(int id);
         IQueryable <Appointment> FilterAppointments(string appointment);

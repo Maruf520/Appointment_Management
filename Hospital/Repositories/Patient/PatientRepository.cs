@@ -22,7 +22,7 @@ namespace Hospital.Models
 
         public Patient GetPatientById(string id)
         {
-            return _hospitalDbContext.Patients.SingleOrDefault(c => c.PatientId == id);
+            return _hospitalDbContext.Patients.SingleOrDefault(c => c.Id == id);
         }
 
         public IEnumerable<Patient> GetPatients()

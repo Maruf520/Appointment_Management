@@ -20,7 +20,7 @@
                     </div>
                     @foreach (var item in Model.Specializations) { 
                     <ul class="list-group list-group-flush">
-                        <a asp-controller="Appointment" asp-action="SelectSpecialization" asp-route-name="@item.Name" class="btn btn-default"><i class="fa fa-marker fa-lg"></i>@item.Name</a>
+                        <a asp-controller="Appointment" asp-action="SelectSpecialization" asp-route-id="@Model.PatientId" asp-route-name="@item.Name"  class="btn btn-default"><i class="fa fa-marker fa-lg"></i>@item.Name</a>
 
                     </ul>
                     }

@@ -11,6 +11,8 @@ namespace Hospital.ViewModels
         public List<Appointment> Appointments  { get; set; }
         public IEnumerable< Appointment > Appointment { get; set; }
         public string StringName { get; set; }
+        public Patient Patient  { get; set; }
+        public string PatientId { get; set; }
         public DateTime  Date { get; set; }
     }
 }

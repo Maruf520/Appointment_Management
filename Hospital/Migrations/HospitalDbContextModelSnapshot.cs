@@ -98,7 +98,7 @@ namespace Hospital.Migrations
 
             modelBuilder.Entity("Hospital.Models.Patient", b =>
                 {
-                    b.Property<string>("PatientId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
@@ -131,7 +131,7 @@ namespace Hospital.Migrations
                     b.Property<int>("gender")
                         .HasColumnType("int");
 
-                    b.HasKey("PatientId");
+                    b.HasKey("Id");
 
                     b.ToTable("Patients");
                 });

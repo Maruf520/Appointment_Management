@@ -22,6 +22,7 @@ namespace Hospital.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AppointmentController> _logger;
+        private readonly Random _random = new Random();
         public AppointmentController(IUnitOfWork unitOfWork, HospitalDbContext context, ILogger<AppointmentController> logger)
         {
             _unitOfWork = unitOfWork;
@@ -29,14 +30,18 @@ namespace Hospital.Controllers
             _logger = logger;
         }
 
-
-        public IActionResult Index()
+        public static string idd;
+        public IActionResult Index(string id)
         {
             var appoint = _unitOfWork.specializationRepository.GetSpecializations();
             SpecializationViewModel specializationViewModel = new SpecializationViewModel
             {
-                Specializations = appoint
+                Specializations = appoint,
+                PatientId = id
             };
+            idd = id;
+
+
             return View(specializationViewModel);
         }
 
@@ -302,11 +307,11 @@ namespace Hospital.Controllers
         public IActionResult GetAppointment (int doctorid, int timeslotid, DateTime Date)
         
         {
-            var timeId = _unitOfWork.appoinmentRepository.GetTimeSlots(timeslotid).FirstOrDefault();
+            var timeId = _unitOfWork.appoinmentRepository.GetTimeSlots(doctorid).FirstOrDefault();
 
 
             var userId  = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _unitOfWork.Patient.GetPatientById(userId);
+            var user = _unitOfWork.Patient.GetPatientById(idd);
             if(user != null)
             {
                 var modelVM = new TimeSlotViewModel
@@ -355,34 +360,55 @@ namespace Hospital.Controllers
         [HttpPost]
         public IActionResult ConfirmAppointment(TimeSlotViewModel model)
         {
-            if(ModelState.IsValid)
-            {
-                var user = _unitOfWork.Patient.GetPatientById(model.PatientId);
+            
+            string id = _random.Next().ToString();
+            var user = _unitOfWork.Patient.GetPatientById(idd);
                 if (user == null)
                 {
 
-              
+                string sMonth = DateTime.Now.ToString("MM");
+                string sDay = DateTime.Now.ToString("dd");
+                DateTime todaysDate = DateTime.Now.Date;
+                int year = todaysDate.Year;
 
-                    Patient patient = new Patient
+                Patient patient = new Patient
                     {
                         Name = model.patient.Name,
                         Phone = model.patient.Phone,
                         BirthDate = model.patient.BirthDate,
-                        PatientId = model.PatientId,
+                        Id = id,
                         gender = model.patient.gender,
                         Address = model.patient.Address,
                         Height = model.patient.Height,
                         Weight = model.patient.Weight,
-                        Token = model.patient.Token
+                        Token = (year + sMonth + sDay + _unitOfWork.Patient.GetPatients().Count()).ToString()
 
 
-                    };
+                };
 
                     _unitOfWork.Patient.Add(patient);
                     _unitOfWork.Complete();
                 }
+                else
+            {
+                Patient patient = new Patient
+                {
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    BirthDate = user.BirthDate,
+                    Id = user.Id,
+                    gender = user.gender,
+                    Address = user.Address,
+                    Height = user.Height,
+                    Weight = user.Weight,
+                    Token = user.Token
 
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                };
+            }
+
+   if(idd != null)
+            {
                 Appointment appointment = new Appointment
                 {
                     StartTime = model.StartTime,
@@ -390,14 +416,31 @@ namespace Hospital.Controllers
                     Details = model.Details,
                     Status = Status.Submitted,
                     DoctorId = model.DoctorId,
-                    PatientId = userId,
+                    PatientId = user.Id,
                     DateTime = model.Date.GetValueOrDefault()
 
                 };
                 _unitOfWork.appoinmentRepository.Add(appointment);
                 _unitOfWork.Complete();
-               
             }
+   else
+            {
+                Appointment appointment = new Appointment
+                {
+                    StartTime = model.StartTime,
+                    EndTime = model.EndTime,
+                    Details = model.Details,
+                    Status = Status.Submitted,
+                    DoctorId = model.DoctorId,
+                    PatientId = id,
+                    DateTime = model.Date.GetValueOrDefault()
+
+                };
+                _unitOfWork.appoinmentRepository.Add(appointment);
+                _unitOfWork.Complete();
+            }
+               
+            
             return RedirectToAction("Index", "Appointment");
         }
 
