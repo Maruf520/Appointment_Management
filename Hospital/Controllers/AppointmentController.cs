@@ -174,7 +174,17 @@ namespace Hospital.Controllers
 
         public async Task<IActionResult> Search()
         {
-            return View();
+            AppointmentViewModel appointmentViewModel = new AppointmentViewModel();
+            var doctorList = _unitOfWork.doctorRepository.GetDoctorList();
+            appointmentViewModel.Doctors = doctorList.Select(a => new SelectListItem()
+            {
+                Value = a.Id.ToString(),
+                Text = a.Name
+            }).ToList();
+
+
+            
+            return View(appointmentViewModel);
         }
         public IActionResult SearchList()
         {
@@ -184,7 +194,7 @@ namespace Hospital.Controllers
         public IActionResult SearchList(AppointmentViewModel model)
         {
             var result = _unitOfWork.appoinmentRepository.CustomFilterAppointment(model.StringName, model.Date);
-
+            var x = result.Where(x => x.Doctor.Id == model.Doctor.Id);
             var viewmodel = new AppointmentViewModel
             {
                 Appointment = result,

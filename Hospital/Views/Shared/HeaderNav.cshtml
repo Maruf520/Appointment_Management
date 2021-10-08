@@ -50,9 +50,8 @@
                     </ul>
                 </li>
                 <!-- Notifications: style can be found in dropdown.less -->
-                @await Component.InvokeAsync("Appointments"); 
+                @await Component.InvokeAsync("Appointments");
                 <!-- Tasks: style can be found in dropdown.less -->
-        
                 <!-- User Account: style can be found in dropdown.less -->
                 @if (signInManager.IsSignedIn(User))
                 {
@@ -97,9 +96,18 @@
                                 </form>
 
                             </li>
+
                         </ul>
                     </li>
-                }
+ }
+                else
+                {
+            <li class="dropdown user user-menu">
+                <a asp-action="Login" asp-controller="Account" class=" data-toggle="dropdown">
+
+                    <span class="hidden-xs">Login</span>
+                </a>
+            </li>}
 
                 <!-- Control Sidebar Toggle Button -->
                 <li>

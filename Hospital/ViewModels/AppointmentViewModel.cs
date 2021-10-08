@@ -1,4 +1,5 @@
 ﻿using Hospital.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace Hospital.ViewModels
         public Patient Patient  { get; set; }
         public string PatientId { get; set; }
         public DateTime  Date { get; set; }
+        public Doctor Doctor { get; set; }
+        public List<SelectListItem> Doctors { set; get; }
     }
 }
